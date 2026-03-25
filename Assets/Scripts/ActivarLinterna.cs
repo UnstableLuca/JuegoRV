@@ -15,7 +15,7 @@ public class ActivarLinterna : MonoBehaviour
     {
         if (args.interactorObject is XRBaseControllerInteractor interactor)
         {
-            interactor.SendHapticImpulse(0.5f, 1);
+            interactor.SendHapticImpulse(amplitude, duration);
         }
     }
 }
