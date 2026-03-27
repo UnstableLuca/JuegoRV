@@ -23,15 +23,16 @@ public class PettingDinos : MonoBehaviour
     }
     private void OnDisable()
     {
-        interactor.hoverExited.RemoveListener(OnHoveredEntered);  
+        //interactor.hoverExited.RemoveListener(OnHoveredEntered);  
     }
-    private void OnHoveredEntered(HoverEnterEventArgs args);
+    private void OnHoveredEntered(HoverEnterEventArgs args)
     {
-        throw NotImplementedException();
+        //throw NotImplementedException();
     }
-// Update is called once per frame
-void Update()
+    // Update is called once per frame
+    void Update()
     {
 
     }
 }
+
