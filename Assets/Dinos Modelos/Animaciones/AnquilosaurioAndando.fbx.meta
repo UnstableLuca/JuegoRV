@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7a0157fa0a5456c4ab435b0feeeb0ce0
+guid: 8d5a99b52661e4a49a34a3fe47f0cda5
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -13,12 +13,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: PM3D_Sphere3D1_3_copy1
-    second: {fileID: 2100000, guid: 1afbf84c515f6d84888d5090637e1e0b, type: 2}
+    second: {fileID: 2100000, guid: 8871492fd732a9d44b38a6ef052f8ca9, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: PM3D_Sphere3D2
-    second: {fileID: 2100000, guid: 8871492fd732a9d44b38a6ef052f8ca9, type: 2}
+    second: {fileID: 2100000, guid: 1afbf84c515f6d84888d5090637e1e0b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -54,7 +54,36 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Armature|ArmatureAction
+      takeName: Armature|ArmatureAction
+      internalID: 4781951162920444690
+      firstFrame: 0
+      lastFrame: 90
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []

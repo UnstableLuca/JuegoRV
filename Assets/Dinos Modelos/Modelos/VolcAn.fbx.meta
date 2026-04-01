@@ -1,34 +1,9 @@
 fileFormatVersion: 2
-guid: 7a0157fa0a5456c4ab435b0feeeb0ce0
+guid: d8b00642acc95db4380f991205d4f992
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: PM3D_Sphere3D1_3
-    second: {fileID: 2100000, guid: 1afbf84c515f6d84888d5090637e1e0b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: PM3D_Sphere3D1_3_copy1
-    second: {fileID: 2100000, guid: 1afbf84c515f6d84888d5090637e1e0b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: PM3D_Sphere3D2
-    second: {fileID: 2100000, guid: 8871492fd732a9d44b38a6ef052f8ca9, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: PolySphere1_1
-    second: {fileID: 2100000, guid: 1afbf84c515f6d84888d5090637e1e0b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: PolySphere2
-    second: {fileID: 2100000, guid: 1afbf84c515f6d84888d5090637e1e0b, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
