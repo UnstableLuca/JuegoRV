@@ -891,6 +891,7 @@ GameObject:
   - component: {fileID: 5686134208185136530}
   - component: {fileID: 5686134208192617028}
   - component: {fileID: -8983241804351749019}
+  - component: {fileID: 7744530598419662028}
   m_Layer: 0
   m_Name: Right Hand Model
   m_TagString: Untagged
@@ -951,6 +952,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionGrip: {fileID: -1758520528963094988, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   actionTrigger: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+--- !u!114 &7744530598419662028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5686134208185362930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b8aa7743087b74bb5ecded63ef597c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PokeAttachPoint: {fileID: 5686134208185136552}
 --- !u!1 &5686134208185362932
 GameObject:
   m_ObjectHideFlags: 0
