@@ -10,9 +10,11 @@ public class Comida : MonoBehaviour
     [Header("Hambre")]
     public float hunger = 50f;
     public float maxHunger = 100f;
-    public float hungerDecreaseSpeed = 5f;
-    public float hungerIncreaseAmount = 25f;
+    public float hungerDecreaseSpeed = 500f;
+    public float hungerIncreaseAmount = 100f;
     public Slider hungerBar;
+
+    public Image hungerFillImage;
 
     private bool shouldFollow = false;
 
@@ -26,6 +28,7 @@ public class Comida : MonoBehaviour
         }
 
         UpdateHungerUI();
+        UpdateHungerColor();
     }
 
     public void SetFollow(bool value)
@@ -76,5 +79,18 @@ public class Comida : MonoBehaviour
                 );
             }
         }
+    }
+    void UpdateHungerColor()
+    {
+        if (hungerFillImage == null) return;
+
+        float percentage = hunger / maxHunger;
+
+        if (percentage < 0.3f)
+            hungerFillImage.color = Color.red;
+        else if (percentage < 0.7f)
+            hungerFillImage.color = Color.yellow;
+        else
+            hungerFillImage.color = Color.green;
     }
 }
