@@ -7,56 +7,20 @@ public class Comida : MonoBehaviour
     public float speed = 3f;
     public float stopDistance = 2f;
 
-    [Header("Hambre")]
-    public float hunger = 50f;
-    public float maxHunger = 100f;
-    public float hungerDecreaseSpeed = 500f;
-    public float hungerIncreaseAmount = 100f;
-    public Slider hungerBar;
-
-    public Image hungerFillImage;
-
     private bool shouldFollow = false;
 
     void Update()
     {
-        DecreaseHungerOverTime();
-
         if (shouldFollow && player != null)
         {
             MoveTowardsPlayer();
         }
 
-        UpdateHungerUI();
-        UpdateHungerColor();
     }
 
     public void SetFollow(bool value)
     {
         shouldFollow = value;
-    }
-
-    public void Eat()
-    {
-        hunger += hungerIncreaseAmount;
-        hunger = Mathf.Clamp(hunger, 0f, maxHunger);
-
-        shouldFollow = false;
-    }
-
-    void DecreaseHungerOverTime()
-    {
-        hunger -= hungerDecreaseSpeed * Time.deltaTime;
-        hunger = Mathf.Clamp(hunger, 0f, maxHunger);
-    }
-
-    void UpdateHungerUI()
-    {
-        if (hungerBar != null)
-        {
-            hungerBar.maxValue = maxHunger;
-            hungerBar.value = hunger;
-        }
     }
 
     void MoveTowardsPlayer()
@@ -79,18 +43,5 @@ public class Comida : MonoBehaviour
                 );
             }
         }
-    }
-    void UpdateHungerColor()
-    {
-        if (hungerFillImage == null) return;
-
-        float percentage = hunger / maxHunger;
-
-        if (percentage < 0.3f)
-            hungerFillImage.color = Color.red;
-        else if (percentage < 0.7f)
-            hungerFillImage.color = Color.yellow;
-        else
-            hungerFillImage.color = Color.green;
     }
 }
