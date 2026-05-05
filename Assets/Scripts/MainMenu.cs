@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
-    void Jugar()
+    public void Jugar()
     {
         
     }
-    void Salir()
+    public void Salir()
     {
         Debug.Log("Saliendo...");
         Application.Quit();
