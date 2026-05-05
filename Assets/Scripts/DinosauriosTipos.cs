@@ -1,6 +1,6 @@
 public enum DinosauriosTipos
 {
     Triceratops,
-    Velociraptor,
-    Trex
+    Pterodactilo,
+    Anquilosaurio
 }

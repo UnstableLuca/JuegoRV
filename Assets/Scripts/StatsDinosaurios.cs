@@ -4,6 +4,7 @@ using System;
 
 public class StatsDinosaurios : MonoBehaviour
 {
+    
     [Header("Hambre")]
     public float hunger = 100f;
     //100f / (24f * 60f * 60f)

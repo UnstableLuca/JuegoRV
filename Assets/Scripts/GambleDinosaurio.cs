@@ -6,7 +6,7 @@ public class GambleDinosaurio : MonoBehaviour
 
     public void HacerGamble()
     {
-        GameManager.Instance.ElegirDinosaurioAleatorio();
+        //GameManager.Instance.ElegirDinosaurioAleatorio();
 
         SceneManager.LoadScene(Escenaa);
     }
