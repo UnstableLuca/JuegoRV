@@ -1,3 +1,4 @@
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -10,7 +11,8 @@ public class SetPokeToFingerAttachPoint : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _xrPokeInteractor = transform.parent.parent.GetComponentInChildren<XRPokeInteractor>();
+        //_xrPokeInteractor = transform.parent.parent.GetComponentInChildren<XRPokeInteractor>();
+        _xrPokeInteractor = GetComponentInParent<XROrigin>().GetComponentInChildren<XRPokeInteractor>(true);
         SetPokeAttachPoint();
     }
 
@@ -20,11 +22,5 @@ public class SetPokeToFingerAttachPoint : MonoBehaviour
         {
             _xrPokeInteractor.attachTransform = PokeAttachPoint;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
