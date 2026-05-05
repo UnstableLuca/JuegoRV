@@ -10,4 +10,10 @@ public class GambleDinosaurio : MonoBehaviour
 
         SceneManager.LoadScene(Escenaa);
     }
+
+    public void Salir()
+    {
+        Debug.Log("Saliendo...");
+        Application.Quit();
+    }
 }
