@@ -44,6 +44,8 @@ public class TecladoVR : MonoBehaviour
 
     public static TecladoVR Instance { get; private set; }
 
+    public Transform playerCamera;
+
     private void Start()
     {
         inputNombre.readOnly = true;
@@ -127,7 +129,8 @@ public class TecladoVR : MonoBehaviour
     {
             transform.position = kbPos;
             ScaleToSize();
-            LookAtTargetOrigin();
+            //LookAtTargetOrigin();
+            LookAtPlayer();
     }
     public void RepositionKeyboard(Transform objectTransform, BoxCollider aCollider = null, float verticalOffset = 0.0f)
     {
@@ -163,5 +166,19 @@ public class TecladoVR : MonoBehaviour
     {
         transform.LookAt(Camera.main.transform.position);
         transform.Rotate(Vector3.up, 180.0f);
+    }
+
+    private void LookAtPlayer()
+    {
+        if (playerCamera == null)
+            return;
+
+        Vector3 direction = playerCamera.position - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude < 0.001f)
+            return;
+
+        transform.rotation = Quaternion.LookRotation(-direction);
     }
 }
