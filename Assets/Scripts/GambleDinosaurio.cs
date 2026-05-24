@@ -12,8 +12,10 @@ public class GambleDinosaurio : MonoBehaviour
 
     public GameObject canvas;
 
+    public GameManager gameManager;
     public void HacerGamble()
     {
+        gameManager.ElegirDinosaurioAleatorio();
         inputField.SetActive(true);
         boton1.SetActive(false);
         boton2.SetActive(false);

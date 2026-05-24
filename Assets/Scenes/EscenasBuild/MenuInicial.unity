@@ -3895,6 +3895,7 @@ MonoBehaviour:
   mesa1: {fileID: 1652379731}
   mesa2: {fileID: 1851082357}
   canvas: {fileID: 1129907128}
+  gameManager: {fileID: 621531287}
 --- !u!1 &624338256
 GameObject:
   m_ObjectHideFlags: 0
@@ -5309,7 +5310,6 @@ GameObject:
   - component: {fileID: 810165512}
   - component: {fileID: 810165511}
   - component: {fileID: 810165510}
-  - component: {fileID: 810165509}
   m_Layer: 7
   m_Name: XR Origin (XR Rig)
   m_TagString: Untagged
@@ -5317,21 +5317,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &810165509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 810165508}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bec2f42c1b78e94fa8b88239a3a9750, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  foodObject: {fileID: 0}
-  foodHoldPoint: {fileID: 1951388328}
-  dinosaur: {fileID: 0}
 --- !u!114 &810165510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11606,6 +11591,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5bb80d78164c2e14aa15784681bd6ce8, type: 3}
       propertyPath: m_Name
       value: mesa
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5bb80d78164c2e14aa15784681bd6ce8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
