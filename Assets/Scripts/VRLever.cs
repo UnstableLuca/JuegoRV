@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 public class VRLever : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class VRLever : MonoBehaviour
     public float minValue = 0f;
     public float maxValue = 1f;
 
+    [Header("Events")]
+    public UnityEvent<float> onValueChanged; 
     [Header("Haptics")]
     public HapticMode hapticMode = HapticMode.Smooth;
 
@@ -45,6 +48,14 @@ public class VRLever : MonoBehaviour
     private void Start()
     {
         lastAngle = hinge.angle;
+
+        float normalized = Mathf.InverseLerp(
+            hinge.limits.min,
+            hinge.limits.max,
+            hinge.angle
+        );
+        
+        leverOutput = Mathf.Lerp(minValue, maxValue, normalized);
     }
 
     private void Update()
@@ -55,7 +66,13 @@ public class VRLever : MonoBehaviour
             hinge.angle
         );
 
-        leverOutput = Mathf.Lerp(minValue, maxValue, normalized);
+        float nuevoValor = Mathf.Lerp(minValue, maxValue, normalized);
+
+        if (!Mathf.Approximately(nuevoValor, leverOutput))
+        {
+            leverOutput = nuevoValor;
+            onValueChanged?.Invoke(leverOutput); 
+        }
 
         if (currentInteractor == null)
             return;

@@ -37,10 +37,13 @@ AudioMixerController:
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
   m_UpdateMode: 0
-  m_ExposedParameters: []
+  m_ExposedParameters:
+  - guid: 7708f72c60841b24a86f7051305136d8
+    name: VolumenMusica
   m_AudioMixerGroupViews:
   - guids:
     - f8ad9f32b5a45cb40b767cf1541c9676
+    - a46b4775e308a064baae16e9e1bb2811
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -53,7 +56,8 @@ AudioMixerGroupController:
   m_Name: Master
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: f8ad9f32b5a45cb40b767cf1541c9676
-  m_Children: []
+  m_Children:
+  - {fileID: 3786088171837511673}
   m_Volume: 8db865908e1a1a34fbf29a06f7a4c445
   m_Pitch: eb69e16fc97e24449b877ba280fc3b56
   m_Send: 00000000000000000000000000000000
@@ -90,3 +94,36 @@ AudioMixerSnapshotController:
   m_FloatValues:
     2581ae6df58ea8e4aa18c494823a794b: 5.3
   m_TransitionOverrides: {}
+--- !u!243 &3786088171837511673
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MusicaFondo
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: a46b4775e308a064baae16e9e1bb2811
+  m_Children: []
+  m_Volume: 7708f72c60841b24a86f7051305136d8
+  m_Pitch: 307cc63023f916447979a46e47edd11c
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 6978865890855437149}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!244 &6978865890855437149
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: cff4b6b4d61c735448f2c0fd8ad4304b
+  m_EffectName: Attenuation
+  m_MixLevel: 7edc4153e0e6d5e428a1681523cef51a
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
