@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
     public string nombreDinosaurio;
     public DinosauriosTipos dinosaurioElegido;
 
+    [HideInInspector] public GameObject dinosaurioVivoEnEscena; 
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -13,7 +15,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -21,9 +22,7 @@ public class GameManager : MonoBehaviour
     public void ElegirDinosaurioAleatorio()
     {
         int random = Random.Range(0, 3);
-
         dinosaurioElegido = (DinosauriosTipos)random;
-
         Debug.Log("Dinosaurio elegido: " + dinosaurioElegido);
     }
 }

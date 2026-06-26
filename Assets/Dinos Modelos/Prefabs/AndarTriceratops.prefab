@@ -107,6 +107,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8c4631d83be5ef04ba8171b6bc84e474, type: 3}
       insertIndex: -1
       addedObject: {fileID: 872462686972451219}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8c4631d83be5ef04ba8171b6bc84e474, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 27791372285363969}
   m_SourcePrefab: {fileID: 100100000, guid: 8c4631d83be5ef04ba8171b6bc84e474, type: 3}
 --- !u!1 &7541334712299317619 stripped
 GameObject:
@@ -402,9 +405,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b221b78144c690042849afc052d88651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  speed: 2
-  stopDistance: 2
+  entornoVirtualRV: {fileID: 0}
+  planeManagerRA: {fileID: 0}
+  raycastManagerRA: {fileID: 0}
+  prefabCuencoComida: {fileID: 0}
+  puntoSueloRA: {fileID: 0}
+  dinosaurioActual: {fileID: 0}
 --- !u!114 &7401123231073825641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,3 +591,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   intervalo: 5
   sonido: {fileID: 8300000, guid: d92f9e9da3f6fb84d91ebbf5086b5727, type: 3}
+--- !u!114 &27791372285363969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7541334712299317619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcc3cdb92199fe84fa3f1ae39d28fd68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
