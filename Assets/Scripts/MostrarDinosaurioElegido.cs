@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MostrarDinosaurioElegido : MonoBehaviour
 {
-    [Header("Dinosaurios de la escena")]
+ [Header("Dinosaurios de la escena")]
     [SerializeField] private GameObject Triceratops;
     [SerializeField] private GameObject Pterodactilo;
     [SerializeField] private GameObject Anquilosaurio;
@@ -21,20 +21,25 @@ public class MostrarDinosaurioElegido : MonoBehaviour
         {
             case DinosauriosTipos.Triceratops:
                 Triceratops.SetActive(true);
+                GameManager.Instance.dinosaurioVivoEnEscena = Triceratops;
                 break;
 
             case DinosauriosTipos.Pterodactilo:
                 Pterodactilo.SetActive(true);
+                GameManager.Instance.dinosaurioVivoEnEscena = Pterodactilo;
                 break;
 
             case DinosauriosTipos.Anquilosaurio:
                 Anquilosaurio.SetActive(true);
+                GameManager.Instance.dinosaurioVivoEnEscena = Anquilosaurio;
                 break;
 
             default:
                 Debug.LogWarning("No se ha reconocido el dinosaurio elegido.");
                 break;
         }
+        
+        Debug.Log("¡Dinosaurio vinculado correctamente al sistema de alimentación: " + GameManager.Instance.dinosaurioVivoEnEscena.name);
     }
 
     private void OcultarTodos()

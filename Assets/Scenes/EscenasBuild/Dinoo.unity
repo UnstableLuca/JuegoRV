@@ -149,7 +149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7490707279939757477, guid: 7753da0ebb3d5474eab7d56fea45f0de, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7836129460105363231, guid: 7753da0ebb3d5474eab7d56fea45f0de, type: 3}
       propertyPath: m_LocalScale.x
@@ -359,7 +359,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7541334712299317619, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7239,7 +7239,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2038641734
 Transform:
   m_ObjectHideFlags: 0
@@ -7791,7 +7791,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5290386315380205359, guid: 28d0abb872625d6438c8f1a38fb871ea, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6982584612162842474, guid: 28d0abb872625d6438c8f1a38fb871ea, type: 3}
       propertyPath: m_InteractionManager
