@@ -1,47 +1,61 @@
 using UnityEngine;
-using UnityEngine.UI;
-
+using UnityEngine.AI;
 public class Comida : MonoBehaviour
 {
-    public Transform player;
-    public float speed = 3f;
-    public float stopDistance = 2f;
+ [Header("Configuración de Entornos")]
+    public GameObject entornoVirtualRV;      
+    public GameObject componentePassthroughRA; 
+    
+    [Header("Elementos de Juego")]
+    public GameObject prefabCuencoComida;    
+    public Transform puntoSueloRA;          
+    
+    [Header("Referencias del Dinosaurio")]
+    public GameObject dinosaurioActual;     
+    private NavMeshAgent navMeshDino;
+    private Animator animDino;
 
-    private bool shouldFollow = false;
+    private bool esperandoCaricia = false;
 
-    void Update()
+    void Start()
     {
-        if (shouldFollow && player != null)
-        {
-            MoveTowardsPlayer();
-        }
-
+        navMeshDino = dinosaurioActual.GetComponent<NavMeshAgent>();
+        animDino = dinosaurioActual.GetComponent<Animator>();
     }
 
-    public void SetFollow(bool value)
+    public void IniciarSecuenciaAlimentacion()
     {
-        shouldFollow = value;
+        entornoVirtualRV.SetActive(false);
+        componentePassthroughRA.SetActive(true);
+
+        Instantiate(prefabCuencoComida, puntoSueloRA.position, Quaternion.identity);
+
+        navMeshDino.SetDestination(puntoSueloRA.position);
+        animDino.SetTrigger("Caminar"); 
     }
 
-    void MoveTowardsPlayer()
+    public void FinalizarComida()
     {
-        Vector3 direction = player.position - transform.position;
-        direction.y = 0f;
+     
+        navMeshDino.SetDestination(Camera.main.transform.position + Camera.main.transform.forward * 1.5f);
+        esperandoCaricia = true;
+    }
 
-        float distance = direction.magnitude;
-
-        if (distance > stopDistance)
+    // 3. LLAMAR A ESTO DESDE EL SCRIPT DE LAS MANOS (Hand Tracking) AL DETECTAR EL CONTACTO
+    public void RegistrarCaricia()
+    {
+        if (esperandoCaricia)
         {
-            transform.position += direction.normalized * speed * Time.deltaTime;
-
-            if (direction != Vector3.zero)
-            {
-                transform.rotation = Quaternion.Slerp(
-                    transform.rotation,
-                    Quaternion.LookRotation(direction),
-                    5f * Time.deltaTime
-                );
-            }
+            esperandoCaricia = false;
+          //  animDino.SetTrigger("Felicidad"); // Animación de alegría
+            
+            Invoke("RegresarAlMundoVirtual", 3.0f);
         }
+    }
+
+    void RegresarAlMundoVirtual()
+    {
+        componentePassthroughRA.SetActive(false);
+        entornoVirtualRV.SetActive(true);
     }
 }
