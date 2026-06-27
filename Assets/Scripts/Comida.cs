@@ -40,7 +40,6 @@ public class Comida : MonoBehaviour
     {
         entornoVirtualRV.SetActive(false);
 
-        // Enciende la detección del suelo real
         planeManagerRA.enabled = true;
         raycastManagerRA.enabled = true;
 
@@ -57,7 +56,6 @@ public class Comida : MonoBehaviour
         esperandoCaricia = true;
     }
 
-    // 3. LLAMAR A ESTO DESDE EL SCRIPT DE LAS MANOS (Hand Tracking) AL DETECTAR EL CONTACTO
     public void RegistrarCaricia()
     {
         if (esperandoCaricia)

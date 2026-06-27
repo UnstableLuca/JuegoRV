@@ -1,17 +1,22 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+
 [RequireComponent(typeof(HingeJoint))]
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(XRGrabInteractable))]
 public class girarBoton : MonoBehaviour
 {[Header("Referencias del Tocadiscos")]
-    [SerializeField] private Animator tocadiscosAnimator; 
-    [SerializeField] private string animacionTocadiscos = "girando";
+    [Header("Referencias del Tocadiscos")]
+    [SerializeField] private Animator platterAnimator; 
+    [SerializeField] private string animationBoolName = "girando";
 
     [Header("Configuración del Dial")]
     [Range(0f, 1f)] 
-    [SerializeField] private float porcentajeActivacion = 0.8f; 
-
+    [SerializeField] private float activationPercent = 0.8f; 
     private HingeJoint hinge;
     private AudioSource audioSource;
+    private XRGrabInteractable grabInteractable;
+    
     private bool turntableIsOn = false;
     private float maxAngle;
 
@@ -19,12 +24,18 @@ public class girarBoton : MonoBehaviour
     {
         hinge = GetComponent<HingeJoint>();
         audioSource = GetComponent<AudioSource>();
+        grabInteractable = GetComponent<XRGrabInteractable>();
+
+        audioSource.playOnAwake = false;
+        audioSource.Stop();
 
         maxAngle = hinge.limits.max;
     }
 
     void Update()
     {
+        if (!grabInteractable.isSelected) return;
+
         float currentAngle = hinge.angle;
         float currentPercent = Mathf.Clamp01(currentAngle / maxAngle);
 
@@ -33,21 +44,21 @@ public class girarBoton : MonoBehaviour
 
     private void CheckDialState(float currentPercent)
     {
-        if (currentPercent >= porcentajeActivacion && !turntableIsOn)
+        if (currentPercent >= activationPercent && !turntableIsOn)
         {
             turntableIsOn = true;
             audioSource.Play();
             
-            if (tocadiscosAnimator != null) 
-                tocadiscosAnimator.SetBool(animacionTocadiscos, true);
+            if (platterAnimator != null) 
+                platterAnimator.SetBool(animationBoolName, true);
         }
-        else if (currentPercent < porcentajeActivacion && turntableIsOn)
+        else if (currentPercent < activationPercent && turntableIsOn)
         {
             turntableIsOn = false;
             audioSource.Stop();
             
-            if (tocadiscosAnimator != null) 
-                tocadiscosAnimator.SetBool(animacionTocadiscos, false);
+            if (platterAnimator != null) 
+                platterAnimator.SetBool(animationBoolName, false);
         }
     }
 }
