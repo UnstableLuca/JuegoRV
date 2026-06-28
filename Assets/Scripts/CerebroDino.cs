@@ -1,338 +1,583 @@
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
 
-public class CerebroDinoNavMesh : MonoBehaviour
+public class CerebroDino : MonoBehaviour
 {
-    public enum Actividad
+    public enum Necesidad
     {
-        Quieto,
-        Caminar,
-        Volar,
-        Aterrizar
+        Ninguna,
+        Hambre,
+        Cuidado,
+        Limpieza,
+        Salud
+    }
+
+    public enum Estado
+    {
+        Vagando,
+        YendoANecesidad,
+        SatisfaciendoNecesidad,
+        Volando,
+        Aterrizando
     }
 
     [Header("Capacidades")]
     public bool puedeCaminar = true;
     public bool puedeVolar = false;
+    public bool puedeAtenderNecesidades = true;
 
-    [Header("Animator")]
-    public Animator animator;
-    public string parametroCaminar = "EstaCaminando";
-    public string parametroVolar = "volando";
-
-    [Header("NavMesh")]
+    [Header("Referencias")]
+    public StatsDinosaurios stats;
     public NavMeshAgent agent;
-    public float radioBusquedaDestino = 10f;
-    public float tiempoParaNuevoDestino = 3f;
+    public Animator animator;
 
-    [Header("Movimiento aéreo")]
+    [Header("Lugares de necesidades")]
+    public Transform foodStation;
+    public Transform careStation;
+    public Transform cleaningStation;
+    public Transform healingStation;
+
+    [Header("Vagabundeo")]
+    public Transform wanderCenter;
+    public float wanderRadius = 10f;
+    public float wanderChangeTime = 4f;
+
+    [Header("Umbrales de necesidad")]
+    public float needThreshold = 45f;
+    public float criticalThreshold = 20f;
+    public float satisfiedThreshold = 85f;
+
+    [Header("Recuperación por segundo")]
+    public float feedAmountPerSecond = 12f;
+    public float careAmountPerSecond = 10f;
+    public float cleanAmountPerSecond = 10f;
+    public float healAmountPerSecond = 8f;
+
+    [Header("Vuelo")]
     public float velocidadVolar = 4f;
     public float velocidadAterrizar = 2f;
     public float alturaMinVuelo = 2f;
     public float alturaMaxVuelo = 5f;
-
-    [Header("Tiempos")]
-    public float tiempoActividadMin = 2f;
-    public float tiempoActividadMax = 5f;
     public float tiempoVueloMin = 4f;
     public float tiempoVueloMax = 8f;
+    public float probabilidadVolar = 0.15f;
+    public float tiempoCambioDireccionVuelo = 3f;
+    public float distanciaBusquedaSuelo = 30f;
 
-    [Header("Probabilidades")]
-    [Range(0f, 1f)] public float probabilidadCaminar = 0.45f;
-    [Range(0f, 1f)] public float probabilidadVolar = 0.35f;
+    [Header("Evitar obstáculos en vuelo simple")]
+    public bool evitarObstaculosVolando = true;
+    public float distanciaDeteccionVuelo = 3f;
+    public LayerMask capasObstaculosVuelo = ~0;
 
-    private Actividad actividadActual;
+    [Header("Animaciones")]
+    public string parametroCaminar = "EstaCaminando";
+    public string parametroVolar = "volando";
+    public string parametroComer = "EstaComiendo";
+    public string parametroJugar = "EstaJugando";
+    public string parametroLimpiar = "EstaLimpiando";
+    public string parametroCurar = "EstaCurando";
+
+    private Estado estadoActual = Estado.Vagando;
+    private Necesidad necesidadActual = Necesidad.Ninguna;
+
+    private float wanderTimer;
+    private float vueloTimer;
+    private float cambioDireccionVueloTimer;
     private float alturaObjetivoVuelo;
-    private float temporizadorDestino;
+
+    private Vector3 direccionVuelo;
 
     void Start()
     {
-        if (animator == null)
-            animator = GetComponent<Animator>();
+        if (stats == null)
+            stats = GetComponent<StatsDinosaurios>();
 
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
 
-        if (agent != null)
-        {
-            agent.updateRotation = true;
-            agent.updatePosition = true;
-        }
+        if (animator == null)
+            animator = GetComponent<Animator>();
 
-        StartCoroutine(CicloDeCerebro());
+        estadoActual = Estado.Vagando;
+        necesidadActual = Necesidad.Ninguna;
+
+        PrepararAgenteParaSuelo();
+        ElegirNuevoDestinoVagabundeo();
     }
 
     void Update()
     {
-        EjecutarActividadActual();
-    }
-
-    IEnumerator CicloDeCerebro()
-    {
-        while (true)
+        switch (estadoActual)
         {
-            Actividad nuevaActividad = ElegirActividad();
-            IniciarActividad(nuevaActividad);
-
-            if (nuevaActividad == Actividad.Volar)
-            {
-                yield return new WaitForSeconds(Random.Range(tiempoVueloMin, tiempoVueloMax));
-            }
-            else if (nuevaActividad == Actividad.Aterrizar)
-            {
-                while (actividadActual == Actividad.Aterrizar)
-                {
-                    yield return null;
-                }
-
-                yield return new WaitForSeconds(Random.Range(tiempoActividadMin, tiempoActividadMax));
-            }
-            else
-            {
-                yield return new WaitForSeconds(Random.Range(tiempoActividadMin, tiempoActividadMax));
-            }
-        }
-    }
-
-    Actividad ElegirActividad()
-    {
-        bool estaEnElAire = !EstaCercaDelSuelo();
-
-        if (puedeVolar && estaEnElAire)
-        {
-            return Random.value > 0.4f ? Actividad.Volar : Actividad.Aterrizar;
-        }
-
-        float decision = Random.value;
-
-        if (puedeVolar && decision < probabilidadVolar)
-        {
-            return Actividad.Volar;
-        }
-
-        if (puedeCaminar && decision < probabilidadVolar + probabilidadCaminar)
-        {
-            return Actividad.Caminar;
-        }
-
-        return Actividad.Quieto;
-    }
-
-    void IniciarActividad(Actividad nuevaActividad)
-    {
-        actividadActual = nuevaActividad;
-        ReiniciarAnimaciones();
-
-        switch (actividadActual)
-        {
-            case Actividad.Quieto:
-                DetenerAgente();
+            case Estado.Volando:
+                EjecutarVuelo();
                 break;
 
-            case Actividad.Caminar:
-                PrepararAgenteParaCaminar();
-                SetBoolSeguro(parametroCaminar, true);
-                ElegirNuevoDestinoNavMesh();
-                break;
-
-            case Actividad.Volar:
-                DesactivarAgenteParaVuelo();
-                alturaObjetivoVuelo = Random.Range(alturaMinVuelo, alturaMaxVuelo);
-                RotarAleatoriamenteEnY();
-                SetBoolSeguro(parametroVolar, true);
-                break;
-
-            case Actividad.Aterrizar:
-                DesactivarAgenteParaVuelo();
-                SetBoolSeguro(parametroVolar, true);
-                break;
-        }
-    }
-
-    void EjecutarActividadActual()
-    {
-        switch (actividadActual)
-        {
-            case Actividad.Caminar:
-                EjecutarCaminarConNavMesh();
-                break;
-
-            case Actividad.Volar:
-                EjecutarVueloSimple();
-                break;
-
-            case Actividad.Aterrizar:
+            case Estado.Aterrizando:
                 EjecutarAterrizaje();
                 break;
+
+            case Estado.Vagando:
+                EjecutarVagabundeo();
+                break;
+
+            case Estado.YendoANecesidad:
+                EjecutarIrANecesidad();
+                break;
+
+            case Estado.SatisfaciendoNecesidad:
+                EjecutarSatisfacerNecesidad();
+                break;
         }
+
+        ActualizarAnimacionCaminar();
     }
 
-    void EjecutarCaminarConNavMesh()
+    void EjecutarVagabundeo()
     {
+        if (!puedeCaminar)
+            return;
+
+        Necesidad necesidadMasUrgente = ObtenerNecesidadMasUrgente();
+
+        if (puedeAtenderNecesidades && necesidadMasUrgente != Necesidad.Ninguna)
+        {
+            IrANecesidad(necesidadMasUrgente);
+            return;
+        }
+
+        if (puedeVolar && Random.value < probabilidadVolar * Time.deltaTime)
+        {
+            IniciarVuelo();
+            return;
+        }
+
         if (agent == null || !agent.enabled || !agent.isOnNavMesh)
             return;
 
-        temporizadorDestino -= Time.deltaTime;
+        wanderTimer -= Time.deltaTime;
 
         bool llegoAlDestino =
             !agent.pathPending &&
-            agent.remainingDistance <= agent.stoppingDistance;
+            agent.remainingDistance <= agent.stoppingDistance + 0.3f;
 
-        if (llegoAlDestino || temporizadorDestino <= 0f)
+        if (wanderTimer <= 0f || llegoAlDestino)
         {
-            ElegirNuevoDestinoNavMesh();
+            ElegirNuevoDestinoVagabundeo();
         }
     }
 
-    void ElegirNuevoDestinoNavMesh()
+    void EjecutarIrANecesidad()
     {
         if (agent == null || !agent.enabled || !agent.isOnNavMesh)
             return;
 
-        for (int i = 0; i < 10; i++)
+        if (agent.pathPending)
+            return;
+
+        bool llegoAlDestino = agent.remainingDistance <= agent.stoppingDistance + 0.3f;
+
+        if (llegoAlDestino)
         {
-            Vector3 puntoAleatorio = transform.position + new Vector3(
-                Random.Range(-radioBusquedaDestino, radioBusquedaDestino),
+            agent.isStopped = true;
+            estadoActual = Estado.SatisfaciendoNecesidad;
+            ActivarAnimacionDeNecesidad(necesidadActual);
+        }
+    }
+
+    void EjecutarSatisfacerNecesidad()
+    {
+        switch (necesidadActual)
+        {
+            case Necesidad.Hambre:
+                stats.Feed(feedAmountPerSecond * Time.deltaTime, false);
+
+                if (stats.hunger >= satisfiedThreshold)
+                    TerminarNecesidad();
+
+                break;
+
+            case Necesidad.Cuidado:
+                stats.Care(careAmountPerSecond * Time.deltaTime, false);
+
+                if (stats.care >= satisfiedThreshold)
+                    TerminarNecesidad();
+
+                break;
+
+            case Necesidad.Limpieza:
+                stats.Clean(cleanAmountPerSecond * Time.deltaTime, false);
+
+                if (stats.cleanliness >= satisfiedThreshold)
+                    TerminarNecesidad();
+
+                break;
+
+            case Necesidad.Salud:
+                stats.Heal(healAmountPerSecond * Time.deltaTime, false);
+
+                if (stats.health >= satisfiedThreshold)
+                    TerminarNecesidad();
+
+                break;
+        }
+    }
+
+    Necesidad ObtenerNecesidadMasUrgente()
+    {
+        if (stats == null)
+            return Necesidad.Ninguna;
+
+        Necesidad necesidad = Necesidad.Ninguna;
+        float valorMasBajo = needThreshold;
+
+        // Primero se priorizan hambre, cuidado y limpieza.
+        // Si estas están en cero, siguen dañando la vida.
+        if (stats.hunger < valorMasBajo)
+        {
+            valorMasBajo = stats.hunger;
+            necesidad = Necesidad.Hambre;
+        }
+
+        if (stats.care < valorMasBajo)
+        {
+            valorMasBajo = stats.care;
+            necesidad = Necesidad.Cuidado;
+        }
+
+        if (stats.cleanliness < valorMasBajo)
+        {
+            valorMasBajo = stats.cleanliness;
+            necesidad = Necesidad.Limpieza;
+        }
+
+        if (necesidad != Necesidad.Ninguna)
+            return necesidad;
+
+        // La salud se atiende cuando no hay otra necesidad básica urgente.
+        if (stats.health < needThreshold)
+            return Necesidad.Salud;
+
+        return Necesidad.Ninguna;
+    }
+
+    void IrANecesidad(Necesidad necesidad)
+    {
+        Transform destino = ObtenerDestinoParaNecesidad(necesidad);
+
+        if (destino == null)
+            return;
+
+        if (!PrepararAgenteParaSuelo())
+            return;
+
+        necesidadActual = necesidad;
+        estadoActual = Estado.YendoANecesidad;
+
+        ReiniciarAnimacionesDeAccion();
+
+        agent.isStopped = false;
+        agent.SetDestination(destino.position);
+    }
+
+    Transform ObtenerDestinoParaNecesidad(Necesidad necesidad)
+    {
+        switch (necesidad)
+        {
+            case Necesidad.Hambre:
+                return foodStation;
+
+            case Necesidad.Cuidado:
+                return careStation;
+
+            case Necesidad.Limpieza:
+                return cleaningStation;
+
+            case Necesidad.Salud:
+                return healingStation;
+
+            default:
+                return null;
+        }
+    }
+
+    void TerminarNecesidad()
+    {
+        necesidadActual = Necesidad.Ninguna;
+        estadoActual = Estado.Vagando;
+
+        ReiniciarAnimacionesDeAccion();
+
+        if (stats != null)
+            stats.SaveStats();
+
+        PrepararAgenteParaSuelo();
+        ElegirNuevoDestinoVagabundeo();
+    }
+
+    void ElegirNuevoDestinoVagabundeo()
+    {
+        if (!PrepararAgenteParaSuelo())
+            return;
+
+        Vector3 centro = wanderCenter != null ? wanderCenter.position : transform.position;
+
+        for (int i = 0; i < 12; i++)
+        {
+            Vector3 puntoAleatorio = centro + new Vector3(
+                Random.Range(-wanderRadius, wanderRadius),
                 0f,
-                Random.Range(-radioBusquedaDestino, radioBusquedaDestino)
+                Random.Range(-wanderRadius, wanderRadius)
             );
 
             NavMeshHit hit;
 
-            if (NavMesh.SamplePosition(puntoAleatorio, out hit, radioBusquedaDestino, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(puntoAleatorio, out hit, wanderRadius, NavMesh.AllAreas))
             {
+                agent.isStopped = false;
                 agent.SetDestination(hit.position);
-                temporizadorDestino = tiempoParaNuevoDestino;
+                wanderTimer = wanderChangeTime;
                 return;
             }
         }
     }
 
-    void EjecutarVueloSimple()
+    void IniciarVuelo()
     {
-        transform.Translate(Vector3.forward * velocidadVolar * Time.deltaTime);
+        if (!puedeVolar)
+            return;
 
-        Vector3 pos = transform.position;
-        pos.y = Mathf.MoveTowards(
-            pos.y,
+        DesactivarAgenteParaVuelo();
+
+        estadoActual = Estado.Volando;
+        necesidadActual = Necesidad.Ninguna;
+
+        vueloTimer = Random.Range(tiempoVueloMin, tiempoVueloMax);
+        alturaObjetivoVuelo = Random.Range(alturaMinVuelo, alturaMaxVuelo);
+
+        ElegirNuevaDireccionVuelo();
+
+        ReiniciarAnimacionesDeAccion();
+        SetBoolSeguro(parametroVolar, true);
+    }
+
+    void EjecutarVuelo()
+    {
+        vueloTimer -= Time.deltaTime;
+        cambioDireccionVueloTimer -= Time.deltaTime;
+
+        Necesidad necesidadUrgente = ObtenerNecesidadMasUrgente();
+
+        if (puedeAtenderNecesidades && necesidadUrgente != Necesidad.Ninguna)
+        {
+            IniciarAterrizaje();
+            return;
+        }
+
+        if (vueloTimer <= 0f)
+        {
+            IniciarAterrizaje();
+            return;
+        }
+
+        if (cambioDireccionVueloTimer <= 0f)
+        {
+            ElegirNuevaDireccionVuelo();
+        }
+
+        if (evitarObstaculosVolando)
+        {
+            if (Physics.Raycast(transform.position, direccionVuelo, distanciaDeteccionVuelo, capasObstaculosVuelo))
+            {
+                ElegirNuevaDireccionVuelo();
+            }
+        }
+
+        Vector3 movimientoHorizontal = direccionVuelo * velocidadVolar * Time.deltaTime;
+
+        Vector3 nuevaPosicion = transform.position + movimientoHorizontal;
+        nuevaPosicion.y = Mathf.MoveTowards(
+            nuevaPosicion.y,
             alturaObjetivoVuelo,
             velocidadAterrizar * Time.deltaTime
         );
 
-        transform.position = pos;
+        transform.position = nuevaPosicion;
+
+        if (direccionVuelo != Vector3.zero)
+        {
+            Quaternion rotacionObjetivo = Quaternion.LookRotation(direccionVuelo);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotacionObjetivo, Time.deltaTime * 3f);
+        }
+    }
+
+    void ElegirNuevaDireccionVuelo()
+    {
+        float anguloY = Random.Range(0f, 360f);
+        direccionVuelo = Quaternion.Euler(0f, anguloY, 0f) * Vector3.forward;
+        direccionVuelo.Normalize();
+
+        cambioDireccionVueloTimer = tiempoCambioDireccionVuelo;
+    }
+
+    void IniciarAterrizaje()
+    {
+        estadoActual = Estado.Aterrizando;
+        SetBoolSeguro(parametroVolar, true);
     }
 
     void EjecutarAterrizaje()
     {
         NavMeshHit hit;
 
-        bool encontroSueloNavMesh = NavMesh.SamplePosition(
+        bool encontroSuelo = NavMesh.SamplePosition(
             transform.position,
             out hit,
-            20f,
+            distanciaBusquedaSuelo,
             NavMesh.AllAreas
         );
 
-        float alturaDestino = encontroSueloNavMesh ? hit.position.y : 0f;
+        float alturaDestino = encontroSuelo ? hit.position.y : 0f;
 
         Vector3 pos = transform.position;
-        pos.y = Mathf.MoveTowards(
-            pos.y,
-            alturaDestino,
-            velocidadAterrizar * Time.deltaTime
-        );
-
+        pos.y = Mathf.MoveTowards(pos.y, alturaDestino, velocidadAterrizar * Time.deltaTime);
         transform.position = pos;
 
         Quaternion rotacionHorizontal = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+
         transform.rotation = Quaternion.Lerp(
             transform.rotation,
             rotacionHorizontal,
             Time.deltaTime * 2f
         );
 
-        if (Mathf.Abs(transform.position.y - alturaDestino) < 0.05f)
+        if (Mathf.Abs(transform.position.y - alturaDestino) <= 0.05f)
         {
-            if (encontroSueloNavMesh && agent != null)
+            SetBoolSeguro(parametroVolar, false);
+
+            if (encontroSuelo)
             {
-                agent.enabled = true;
-                agent.Warp(hit.position);
+                transform.position = hit.position;
             }
 
-            actividadActual = Actividad.Quieto;
-            ReiniciarAnimaciones();
+            PrepararAgenteParaSuelo();
+
+            Necesidad necesidad = ObtenerNecesidadMasUrgente();
+
+            if (puedeAtenderNecesidades && necesidad != Necesidad.Ninguna)
+            {
+                IrANecesidad(necesidad);
+            }
+            else
+            {
+                estadoActual = Estado.Vagando;
+                ElegirNuevoDestinoVagabundeo();
+            }
         }
     }
 
-    void PrepararAgenteParaCaminar()
+    bool PrepararAgenteParaSuelo()
     {
         if (agent == null)
-            return;
+            return false;
 
         if (!agent.enabled)
-            agent.enabled = true;
+        {
+            NavMeshHit hit;
+
+            if (NavMesh.SamplePosition(transform.position, out hit, distanciaBusquedaSuelo, NavMesh.AllAreas))
+            {
+                transform.position = hit.position;
+                agent.enabled = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         if (!agent.isOnNavMesh)
         {
             NavMeshHit hit;
 
-            if (NavMesh.SamplePosition(transform.position, out hit, 5f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(transform.position, out hit, distanciaBusquedaSuelo, NavMesh.AllAreas))
             {
                 agent.Warp(hit.position);
+            }
+            else
+            {
+                return false;
             }
         }
 
         if (agent.isOnNavMesh)
         {
             agent.isStopped = false;
+            return true;
         }
-    }
 
-    void DetenerAgente()
-    {
-        if (agent != null && agent.enabled && agent.isOnNavMesh)
-        {
-            agent.isStopped = true;
-            agent.ResetPath();
-        }
+        return false;
     }
 
     void DesactivarAgenteParaVuelo()
     {
-        if (agent != null && agent.enabled)
-        {
-            if (agent.isOnNavMesh)
-            {
-                agent.ResetPath();
-            }
+        if (agent == null)
+            return;
 
-            agent.enabled = false;
+        if (agent.enabled && agent.isOnNavMesh)
+        {
+            agent.ResetPath();
+        }
+
+        agent.enabled = false;
+    }
+
+    void ActivarAnimacionDeNecesidad(Necesidad necesidad)
+    {
+        ReiniciarAnimacionesDeAccion();
+
+        switch (necesidad)
+        {
+            case Necesidad.Hambre:
+                SetBoolSeguro(parametroComer, true);
+                break;
+
+            case Necesidad.Cuidado:
+                SetBoolSeguro(parametroJugar, true);
+                break;
+
+            case Necesidad.Limpieza:
+                SetBoolSeguro(parametroLimpiar, true);
+                break;
+
+            case Necesidad.Salud:
+                SetBoolSeguro(parametroCurar, true);
+                break;
         }
     }
 
-    bool EstaCercaDelSuelo()
+    void ReiniciarAnimacionesDeAccion()
     {
-        NavMeshHit hit;
+        SetBoolSeguro(parametroComer, false);
+        SetBoolSeguro(parametroJugar, false);
+        SetBoolSeguro(parametroLimpiar, false);
+        SetBoolSeguro(parametroCurar, false);
+    }
 
-        if (NavMesh.SamplePosition(transform.position, out hit, 2f, NavMesh.AllAreas))
+    void ActualizarAnimacionCaminar()
+    {
+        bool caminando = false;
+
+        if (agent != null && agent.enabled && agent.isOnNavMesh)
         {
-            return Mathf.Abs(transform.position.y - hit.position.y) < 0.2f;
+            caminando =
+                !agent.isStopped &&
+                agent.velocity.magnitude > 0.1f &&
+                estadoActual != Estado.Volando &&
+                estadoActual != Estado.Aterrizando;
         }
 
-        return transform.position.y <= 0.2f;
-    }
-
-    void RotarAleatoriamenteEnY()
-    {
-        float anguloY = Random.Range(0f, 360f);
-        transform.rotation = Quaternion.Euler(0f, anguloY, 0f);
-    }
-
-    void ReiniciarAnimaciones()
-    {
-        SetBoolSeguro(parametroCaminar, false);
-        SetBoolSeguro(parametroVolar, false);
+        SetBoolSeguro(parametroCaminar, caminando);
     }
 
     void SetBoolSeguro(string nombreParametro, bool valor)

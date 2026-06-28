@@ -64,6 +64,9 @@ PrefabInstance:
       addedObject: {fileID: 1886248441164266291}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1764102298519186974}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 8954153777994801010}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
       insertIndex: -1
@@ -136,7 +139,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5290386315380205359}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6363867d3a0eacd4ea0a8753a29ea236, type: 3}
   m_Name: 
@@ -144,6 +147,36 @@ MonoBehaviour:
   velocidad: 2
   tiempoCambioMax: 4
   tiempoCambioMin: 2
+--- !u!114 &1764102298519186974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290386315380205359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a810dd5590700144959ed490b121e21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  puedeCaminar: 1
+  puedeVolar: 0
+  animator: {fileID: 6143363078216605630}
+  parametroCaminar: EstaCaminando
+  parametroVolar: volando
+  agent: {fileID: 5189785470583787604}
+  radioBusquedaDestino: 10
+  tiempoParaNuevoDestino: 3
+  velocidadVolar: 4
+  velocidadAterrizar: 2
+  alturaMinVuelo: 2
+  alturaMaxVuelo: 5
+  tiempoActividadMin: 2
+  tiempoActividadMax: 5
+  tiempoVueloMin: 4
+  tiempoVueloMax: 8
+  probabilidadCaminar: 0.45
+  probabilidadVolar: 0.35
 --- !u!23 &8954153777994801010
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -603,7 +636,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 5290386315380205359}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
@@ -613,6 +646,6 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: 0.6
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4

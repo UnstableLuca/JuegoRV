@@ -4,17 +4,18 @@ using System;
 
 public class StatsDinosaurios : MonoBehaviour
 {
-    
+    [Header("Identidad")]
+    public string dinoId = "Dino_01";
+
     [Header("Hambre")]
     public float hunger = 100f;
-    //100f / (24f * 60f * 60f)
-    public float hungerDecreaseSpeed = 0.001157f; //24h
+    public float hungerDecreaseSpeed = 0.001157f; // Aproximadamente 24h
     public Slider hungerBar;
     public Image hungerFill;
 
     [Header("Diversión / Cuidados")]
     public float care = 100f;
-    public float careDecreaseSpeed = 0.000772f; //36h
+    public float careDecreaseSpeed = 0.000772f; // Aproximadamente 36h
     public Slider careBar;
     public Image careFill;
 
@@ -26,21 +27,37 @@ public class StatsDinosaurios : MonoBehaviour
 
     [Header("Limpieza")]
     public float cleanliness = 100f;
-    public float cleanlinessDecreaseSpeed = 0.000579f; //48h
+    public float cleanlinessDecreaseSpeed = 0.000579f; // Aproximadamente 48h
     public Slider cleanlinessBar;
     public Image cleanlinessFill;
 
     [Header("General")]
     public float maxValue = 100f;
 
+    [Header("Guardado")]
+    public float saveInterval = 5f;
+
     [Header("Offline Simulation")]
     public float maxOfflineHours = 240f;
 
-    private const string HungerKey = "Dino_Hunger";
-    private const string CareKey = "Dino_Care";
-    private const string HealthKey = "Dino_Health";
-    private const string CleanlinessKey = "Dino_Cleanliness";
-    private const string LastSaveTimeKey = "Dino_LastSaveTime";
+    private float saveTimer;
+
+    private string Prefix
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(dinoId))
+                return gameObject.name;
+
+            return dinoId;
+        }
+    }
+
+    private string HungerKey => Prefix + "_Hunger";
+    private string CareKey => Prefix + "_Care";
+    private string HealthKey => Prefix + "_Health";
+    private string CleanlinessKey => Prefix + "_Cleanliness";
+    private string LastSaveTimeKey => Prefix + "_LastSaveTime";
 
     void Start()
     {
@@ -55,7 +72,13 @@ public class StatsDinosaurios : MonoBehaviour
         CheckHealthDamage(Time.deltaTime);
         UpdateAllBars();
 
-        SaveStats();
+        saveTimer += Time.deltaTime;
+
+        if (saveTimer >= saveInterval)
+        {
+            saveTimer = 0f;
+            SaveStats();
+        }
     }
 
     void DecreaseStatsOverTime()
@@ -186,7 +209,7 @@ public class StatsDinosaurios : MonoBehaviour
         health = Mathf.Clamp(health, 0f, maxValue);
     }
 
-    void SaveStats()
+    public void SaveStats()
     {
         PlayerPrefs.SetFloat(HungerKey, hunger);
         PlayerPrefs.SetFloat(CareKey, care);
@@ -221,35 +244,47 @@ public class StatsDinosaurios : MonoBehaviour
         SaveStats();
     }
 
-    public void Feed(float amount)
+    public void Feed(float amount, bool saveImmediately = true)
     {
         hunger += amount;
         hunger = Mathf.Clamp(hunger, 0f, maxValue);
-        SaveStats();
+
+        if (saveImmediately)
+            SaveStats();
+
         UpdateAllBars();
     }
 
-    public void Care(float amount)
+    public void Care(float amount, bool saveImmediately = true)
     {
         care += amount;
         care = Mathf.Clamp(care, 0f, maxValue);
-        SaveStats();
+
+        if (saveImmediately)
+            SaveStats();
+
         UpdateAllBars();
     }
 
-    public void Heal(float amount)
+    public void Heal(float amount, bool saveImmediately = true)
     {
         health += amount;
         health = Mathf.Clamp(health, 0f, maxValue);
-        SaveStats();
+
+        if (saveImmediately)
+            SaveStats();
+
         UpdateAllBars();
     }
 
-    public void Clean(float amount)
+    public void Clean(float amount, bool saveImmediately = true)
     {
         cleanliness += amount;
         cleanliness = Mathf.Clamp(cleanliness, 0f, maxValue);
-        SaveStats();
+
+        if (saveImmediately)
+            SaveStats();
+
         UpdateAllBars();
     }
 

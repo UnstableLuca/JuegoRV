@@ -80,6 +80,9 @@ PrefabInstance:
       addedObject: {fileID: 7706171498633572394}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4742aed1ff136f848aa2abd8236fd7c4, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 4967819071041990620}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4742aed1ff136f848aa2abd8236fd7c4, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 6358646012856772498}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4742aed1ff136f848aa2abd8236fd7c4, type: 3}
       insertIndex: -1
@@ -111,6 +114,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4742aed1ff136f848aa2abd8236fd7c4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2759208177891493013}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4742aed1ff136f848aa2abd8236fd7c4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4524874131792121679}
   m_SourcePrefab: {fileID: 100100000, guid: 4742aed1ff136f848aa2abd8236fd7c4, type: 3}
 --- !u!1 &7490707279939757477 stripped
 GameObject:
@@ -199,6 +205,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4967819071041990620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7490707279939757477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a810dd5590700144959ed490b121e21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  puedeCaminar: 0
+  puedeVolar: 1
+  animator: {fileID: 987844351421609439}
+  parametroCaminar: EstaCaminando
+  parametroVolar: volando
+  agent: {fileID: 4524874131792121679}
+  radioBusquedaDestino: 10
+  tiempoParaNuevoDestino: 3
+  velocidadVolar: 4
+  velocidadAterrizar: 2
+  alturaMinVuelo: 2
+  alturaMaxVuelo: 5
+  tiempoActividadMin: 2
+  tiempoActividadMax: 5
+  tiempoVueloMin: 4
+  tiempoVueloMax: 8
+  probabilidadCaminar: 0.45
+  probabilidadVolar: 0.35
 --- !u!65 &6358646012856772498
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -604,3 +640,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcc3cdb92199fe84fa3f1ae39d28fd68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!195 &4524874131792121679
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7490707279939757477}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 2
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 3
+  m_BaseOffset: 0.35
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
