@@ -28,13 +28,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2678967622204634926}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.45988122, y: 0.17590563, z: -0.08239141, w: 0.86647457}
-  m_LocalPosition: {x: 0.34100512, y: 0.414, z: 0.88}
-  m_LocalScale: {x: 0.1624391, y: 0.1189314, z: 0.1624391}
+  m_LocalRotation: {x: 0.93787515, y: 0.18264359, z: 0.06612456, w: 0.28750485}
+  m_LocalPosition: {x: 0.34100512, y: -0.8800001, z: 0.4139998}
+  m_LocalScale: {x: 0.16243911, y: 0.118931405, z: 0.1624391}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3903065642195546698}
-  m_Father: {fileID: 4765066784118373781}
+  m_Father: {fileID: 4508173237393861899}
   m_LocalEulerAnglesHint: {x: 55.684, y: 23.972, z: 1.932}
 --- !u!33 &618669221208444059
 MeshFilter:
@@ -229,13 +229,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4181702794313199685}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.6855196, y: 0.30492392, z: -0.064503305, w: 0.6579694}
-  m_LocalPosition: {x: 0.41899586, y: 0.32400128, z: 0.9635}
-  m_LocalScale: {x: 0.068252034, y: 0.049971405, z: 0.068252034}
+  m_LocalRotation: {x: 0.94999015, y: 0.26122448, z: 0.17000306, w: -0.019481003}
+  m_LocalPosition: {x: 0.41899586, y: -0.9635005, z: 0.32400113}
+  m_LocalScale: {x: 0.06825204, y: 0.049971398, z: 0.06825203}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3027396604320195825}
-  m_Father: {fileID: 4765066784118373781}
+  m_Father: {fileID: 4508173237393861899}
   m_LocalEulerAnglesHint: {x: 70.295, y: 111.912, z: 81.162}
 --- !u!33 &980942922241278541
 MeshFilter:
@@ -461,13 +461,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6938905214342231949}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.067, y: 0.638, z: 0.409}
-  m_LocalScale: {x: 0.26893, y: 0.19689977, z: 0.26893}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 0.06699913, y: -0.4090013, z: 0.6379995}
+  m_LocalScale: {x: 0.26892996, y: 0.19689979, z: 0.26893002}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5967715122630231607}
-  m_Father: {fileID: 4765066784118373781}
+  m_Father: {fileID: 4508173237393861899}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4817873576149177524
 MeshFilter:
@@ -658,13 +658,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 8879528566716807029, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6164298087937640343}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 8879528566716807029, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2730736696762521037}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 8879528566716807029, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8008941068463119455}
     m_AddedComponents:
@@ -717,9 +717,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5189785470583787604}
   m_SourcePrefab: {fileID: 100100000, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
---- !u!4 &4765066784118373781 stripped
+--- !u!4 &4508173237393861899 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8879528566716807029, guid: 8d5a99b52661e4a49a34a3fe47f0cda5, type: 3}
   m_PrefabInstance: {fileID: 5019916557180869246}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &5290386315380205359 stripped
