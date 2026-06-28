@@ -1426,7 +1426,7 @@ PrefabInstance:
     - target: {fileID: 8535734536123532965, guid: 57abf18a21c239642a311f29ad7d6351, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 836765752}
     - target: {fileID: 8535734536123532965, guid: 57abf18a21c239642a311f29ad7d6351, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
@@ -1437,7 +1437,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8535734536123532965, guid: 57abf18a21c239642a311f29ad7d6351, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: GambleDinosaurio, Assembly-CSharp
+      value: SALIR, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8535734536123532965, guid: 57abf18a21c239642a311f29ad7d6351, type: 3}
       propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -2139,6 +2139,7 @@ GameObject:
   - component: {fileID: 836765749}
   - component: {fileID: 836765751}
   - component: {fileID: 836765750}
+  - component: {fileID: 836765752}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2227,6 +2228,18 @@ MonoBehaviour:
   nombreDinosaurio: 
   dinosaurioElegido: 0
   dinosaurioVivoEnEscena: {fileID: 0}
+--- !u!114 &836765752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 836765745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4154b9ab251548547ab2174972f51434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &884653979 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7547425471544954036, guid: 61451e5d82da69b49982af1774b40fc4, type: 3}
@@ -5339,7 +5352,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2323045542968610366, guid: fd0daeddc25600e4dab287bfc885fe43, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5534383206373592005, guid: fd0daeddc25600e4dab287bfc885fe43, type: 3}
       propertyPath: m_Axis.x
@@ -5352,6 +5365,10 @@ PrefabInstance:
     - target: {fileID: 5534383206373592005, guid: fd0daeddc25600e4dab287bfc885fe43, type: 3}
       propertyPath: m_Axis.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8181876156326759045, guid: fd0daeddc25600e4dab287bfc885fe43, type: 3}
+      propertyPath: MaxDistance
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7663952109363046218, guid: fd0daeddc25600e4dab287bfc885fe43, type: 3}
