@@ -131,6 +131,14 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 1334456948}
+    - target: {fileID: 2763975270157430530, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763975270157430530, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.46
+      objectReference: {fileID: 0}
     - target: {fileID: 3712495479843040151, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: player
       value: 
@@ -147,33 +155,41 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4774302870215233354, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
+      propertyPath: careStation
+      value: 
+      objectReference: {fileID: 884745268}
+    - target: {fileID: 4774302870215233354, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
+      propertyPath: foodStation
+      value: 
+      objectReference: {fileID: 1194874253}
     - target: {fileID: 5754141874036048698, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 1334456948}
     - target: {fileID: 7197846611737457609, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.463299
+      value: 0.464645
       objectReference: {fileID: 0}
     - target: {fileID: 7197846611737457609, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.46329898
+      value: 0.464645
       objectReference: {fileID: 0}
     - target: {fileID: 7197846611737457609, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.463299
+      value: 0.464645
       objectReference: {fileID: 0}
     - target: {fileID: 7197846611737457609, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 65.027
+      value: 65.511
       objectReference: {fileID: 0}
     - target: {fileID: 7197846611737457609, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.24
+      value: 18.026
       objectReference: {fileID: 0}
     - target: {fileID: 7197846611737457609, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 28.961
+      value: 28.959
       objectReference: {fileID: 0}
     - target: {fileID: 7197846611737457609, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2790,6 +2806,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: -87.192
       objectReference: {fileID: 0}
+    - target: {fileID: -466329591000292508, guid: f0ca27eeb16cb74409804552b7b70ff9, type: 3}
+      propertyPath: m_Name
+      value: BaseTienda
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f0ca27eeb16cb74409804552b7b70ff9, type: 3}
       propertyPath: m_Name
       value: 'Casa '
@@ -3352,7 +3372,7 @@ GameObject:
   - component: {fileID: 1194874255}
   - component: {fileID: 1194874254}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: comida station
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7564,6 +7584,14 @@ PrefabInstance:
       propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1764102298519186974, guid: 28d0abb872625d6438c8f1a38fb871ea, type: 3}
+      propertyPath: careStation
+      value: 
+      objectReference: {fileID: 884745268}
+    - target: {fileID: 1764102298519186974, guid: 28d0abb872625d6438c8f1a38fb871ea, type: 3}
+      propertyPath: foodStation
+      value: 
+      objectReference: {fileID: 1194874253}
     - target: {fileID: 4765066784118373781, guid: 28d0abb872625d6438c8f1a38fb871ea, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.69064
@@ -7582,7 +7610,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4765066784118373781, guid: 28d0abb872625d6438c8f1a38fb871ea, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 17.832558
+      value: 17.34
       objectReference: {fileID: 0}
     - target: {fileID: 4765066784118373781, guid: 28d0abb872625d6438c8f1a38fb871ea, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8747,6 +8775,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1310860964}
     m_Modifications:
+    - target: {fileID: 2212990798188778108, guid: 61451e5d82da69b49982af1774b40fc4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.0002
+      objectReference: {fileID: 0}
+    - target: {fileID: 2212990798188778108, guid: 61451e5d82da69b49982af1774b40fc4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0129
+      objectReference: {fileID: 0}
+    - target: {fileID: 2212990798188778108, guid: 61451e5d82da69b49982af1774b40fc4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.008
+      objectReference: {fileID: 0}
     - target: {fileID: 2746769047274808985, guid: 61451e5d82da69b49982af1774b40fc4, type: 3}
       propertyPath: m_InteractionManager
       value: 
@@ -8883,7 +8923,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5826043331265702151, guid: c56ca3f784ce45d4f89784f38932b112, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.642
+      value: 8.63
       objectReference: {fileID: 0}
     - target: {fileID: 5826043331265702151, guid: c56ca3f784ce45d4f89784f38932b112, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8916,6 +8956,14 @@ PrefabInstance:
     - target: {fileID: 6598216722045498301, guid: c56ca3f784ce45d4f89784f38932b112, type: 3}
       propertyPath: m_Name
       value: gafas sol
+      objectReference: {fileID: 0}
+    - target: {fileID: 7430958561257980128, guid: c56ca3f784ce45d4f89784f38932b112, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7430958561257980128, guid: c56ca3f784ce45d4f89784f38932b112, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9130,6 +9178,14 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 1334456948}
+    - target: {fileID: 6258147581055317979, guid: 00f2a1356462ac94a80ef415a9fa1e34, type: 3}
+      propertyPath: careStation
+      value: 
+      objectReference: {fileID: 884745268}
+    - target: {fileID: 6258147581055317979, guid: 00f2a1356462ac94a80ef415a9fa1e34, type: 3}
+      propertyPath: foodStation
+      value: 
+      objectReference: {fileID: 1194874253}
     - target: {fileID: 7113741987652701432, guid: 00f2a1356462ac94a80ef415a9fa1e34, type: 3}
       propertyPath: m_Name
       value: TRexAndando
@@ -9180,7 +9236,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7634382061903697474, guid: 00f2a1356462ac94a80ef415a9fa1e34, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 17.11
+      value: 17.033
       objectReference: {fileID: 0}
     - target: {fileID: 7634382061903697474, guid: 00f2a1356462ac94a80ef415a9fa1e34, type: 3}
       propertyPath: m_LocalPosition.z
