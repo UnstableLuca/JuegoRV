@@ -100,7 +100,15 @@ public class TecladoVR : MonoBehaviour
             nombreFinal = nombrePorDefecto;
         }
 
-        GameManager.Instance.nombreDinosaurio = nombreFinal;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.nombreDinosaurio = nombreFinal;
+        }
+        else
+        {
+            Debug.LogError("No existe GameManager en la escena.");
+            return;
+        }
 
         SceneManager.LoadScene(Escenaa);
     }

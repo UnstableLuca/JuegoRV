@@ -32,6 +32,7 @@ public class HerramientaDinoVR : MonoBehaviour
 
     private bool estaAgarrado;
     private Rigidbody rb;
+    private StatsDinosaurios statsDino;
 
     void Awake()
     {
