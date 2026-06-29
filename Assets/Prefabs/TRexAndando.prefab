@@ -426,13 +426,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7112105388877560461}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.272, y: 0.98, z: -0.012}
+  m_LocalRotation: {x: -0.9079389, y: 0.17006579, z: -0.057042077, w: 0.3787755}
+  m_LocalPosition: {x: -0.27199423, y: 0.98000264, z: -0.012003882}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 37375646780685913}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -41.944, y: 161.792, z: -151.752}
 --- !u!1 &7795136627590026479
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,8 +462,8 @@ Transform:
   m_GameObject: {fileID: 7795136627590026479}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0780825, y: 0.06114101, z: 0.023055874, w: 0.9948032}
-  m_LocalPosition: {x: 0.00090369827, y: 0.013344025, z: 0.002625882}
-  m_LocalScale: {x: 0.0070239734, y: 0.0036657422, z: 0.007023973}
+  m_LocalPosition: {x: -0.0048, y: 0.0141, z: 0.0031}
+  m_LocalScale: {x: 0.002603576, y: 0.0013587807, z: 0.002603576}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2545793508614530826}
@@ -773,7 +773,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puedeCaminar: 1
-  puedeVolar: 0
   puedeAtenderNecesidades: 1
   stats: {fileID: 0}
   agent: {fileID: 0}
@@ -785,6 +784,11 @@ MonoBehaviour:
   wanderCenter: {fileID: 0}
   wanderRadius: 10
   wanderChangeTime: 4
+  idleTimeMin: 2
+  idleTimeMax: 5
+  esperarIdleAlTerminarNecesidad: 1
+  esperarIdleAlLlegarDestino: 1
+  idlePuedeSerInterrumpidoPorNecesidadCritica: 1
   needThreshold: 45
   criticalThreshold: 20
   satisfiedThreshold: 85
@@ -792,22 +796,8 @@ MonoBehaviour:
   careAmountPerSecond: 10
   cleanAmountPerSecond: 10
   healAmountPerSecond: 8
-  velocidadVolar: 4
-  velocidadAterrizar: 2
-  alturaMinVuelo: 2
-  alturaMaxVuelo: 5
-  tiempoVueloMin: 4
-  tiempoVueloMax: 8
-  probabilidadVolar: 0.15
-  tiempoCambioDireccionVuelo: 3
-  distanciaBusquedaSuelo: 30
-  evitarObstaculosVolando: 1
-  distanciaDeteccionVuelo: 3
-  capasObstaculosVuelo:
-    serializedVersion: 2
-    m_Bits: 4294967295
   parametroCaminar: EstaCaminando
-  parametroVolar: volando
+  parametroIdle: EstaIdle
   parametroComer: EstaComiendo
   parametroJugar: EstaJugando
   parametroLimpiar: EstaLimpiando
@@ -918,11 +908,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: {fileID: 0}
-  leftHandInteractor: {fileID: 0}
-  rightHandInteractor: {fileID: 0}
+  stats: {fileID: 0}
   minPetSpeed: 0.02
   maxPetSpeed: 0.25
   smoothing: 12
+  increaseCareWhenPetting: 1
+  carePerSecond: 8
+  useHaptics: 1
   pulseDuration: 0.02
   pulseInterval: 0.04
   amplitudeCurve:
@@ -963,11 +955,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entornoVirtualRV: {fileID: 0}
+  desactivarGravedadJugadorDuranteComida: 1
+  rigidbodiesJugador: []
+  scriptsGravedadJugador: []
   planeManagerRA: {fileID: 0}
   raycastManagerRA: {fileID: 0}
   prefabCuencoComida: {fileID: 0}
   puntoSueloRA: {fileID: 0}
   dinosaurioActual: {fileID: 0}
+  velocidadDino: 1.5
+  velocidadRotacion: 5
+  distanciaParada: 0.15
+  tiempoComiendo: 3
+  distanciaFrenteJugador: 1.5
+  cantidadComida: 35
+  cantidadCuidadoPorCaricia: 10
+  tiempoAntesDeVolver: 3
+  restaurarPosicionVirtualAlFinal: 1
+  distanciaBuscarNavMesh: 5
+  parametroCaminar: EstaCaminando
+  parametroComer: EstaComiendo
+  parametroIdle: EstaIdle
+  triggerFelicidad: Felicidad
+  usarTriggerFelicidad: 0
 --- !u!114 &7116011172964394433
 MonoBehaviour:
   m_ObjectHideFlags: 0

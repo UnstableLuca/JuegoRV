@@ -194,13 +194,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3275837130300011218}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.31, y: 0.74, z: 0.22}
+  m_LocalRotation: {x: -0.7285924, y: 0.000000119209275, z: 0.00000015273689, w: 0.68494767}
+  m_LocalPosition: {x: -0.22, y: 1.03, z: 0.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6164298087937640343}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -93.537, y: 0, z: 0}
 --- !u!1 &4181702794313199685
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,14 +461,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6938905214342231949}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.23452069, y: -0.23209034, z: 0.13797867, w: 0.93386084}
-  m_LocalPosition: {x: -0.11805338, y: 0.37552235, z: 0.083807245}
-  m_LocalScale: {x: 0.26892996, y: 0.19689979, z: 0.26893}
+  m_LocalRotation: {x: -0.3147601, y: -0.022564976, z: 0.22425485, w: 0.9220232}
+  m_LocalPosition: {x: -0.22899662, y: 0.39200008, z: 0.11500141}
+  m_LocalScale: {x: 0.17384976, y: 0.12728587, z: 0.17384979}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5967715122630231607}
   m_Father: {fileID: 2230492854284553831}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -34.772, y: -12.857, z: 31.381}
 --- !u!33 &4817873576149177524
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -825,7 +825,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puedeCaminar: 1
-  puedeVolar: 0
   puedeAtenderNecesidades: 1
   stats: {fileID: 0}
   agent: {fileID: 5189785470583787604}
@@ -837,6 +836,11 @@ MonoBehaviour:
   wanderCenter: {fileID: 0}
   wanderRadius: 10
   wanderChangeTime: 4
+  idleTimeMin: 2
+  idleTimeMax: 5
+  esperarIdleAlTerminarNecesidad: 1
+  esperarIdleAlLlegarDestino: 1
+  idlePuedeSerInterrumpidoPorNecesidadCritica: 1
   needThreshold: 45
   criticalThreshold: 20
   satisfiedThreshold: 85
@@ -844,22 +848,8 @@ MonoBehaviour:
   careAmountPerSecond: 10
   cleanAmountPerSecond: 10
   healAmountPerSecond: 8
-  velocidadVolar: 4
-  velocidadAterrizar: 2
-  alturaMinVuelo: 2
-  alturaMaxVuelo: 5
-  tiempoVueloMin: 4
-  tiempoVueloMax: 8
-  probabilidadVolar: 0.35
-  tiempoCambioDireccionVuelo: 3
-  distanciaBusquedaSuelo: 30
-  evitarObstaculosVolando: 1
-  distanciaDeteccionVuelo: 3
-  capasObstaculosVuelo:
-    serializedVersion: 2
-    m_Bits: 4294967295
   parametroCaminar: EstaCaminando
-  parametroVolar: volando
+  parametroIdle: EstaIdle
   parametroComer: EstaComiendo
   parametroJugar: EstaJugando
   parametroLimpiar: EstaLimpiando
@@ -970,11 +960,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: {fileID: 6982584612162842474}
-  leftHandInteractor: {fileID: 0}
-  rightHandInteractor: {fileID: 0}
+  stats: {fileID: 0}
   minPetSpeed: 0.02
   maxPetSpeed: 0.25
   smoothing: 12
+  increaseCareWhenPetting: 1
+  carePerSecond: 8
+  useHaptics: 1
   pulseDuration: 0.02
   pulseInterval: 0.04
   amplitudeCurve:
@@ -1117,11 +1109,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entornoVirtualRV: {fileID: 0}
+  desactivarGravedadJugadorDuranteComida: 1
+  rigidbodiesJugador: []
+  scriptsGravedadJugador: []
   planeManagerRA: {fileID: 0}
   raycastManagerRA: {fileID: 0}
   prefabCuencoComida: {fileID: 0}
   puntoSueloRA: {fileID: 0}
   dinosaurioActual: {fileID: 0}
+  velocidadDino: 1.5
+  velocidadRotacion: 5
+  distanciaParada: 0.15
+  tiempoComiendo: 3
+  distanciaFrenteJugador: 1.5
+  cantidadComida: 35
+  cantidadCuidadoPorCaricia: 10
+  tiempoAntesDeVolver: 3
+  restaurarPosicionVirtualAlFinal: 1
+  distanciaBuscarNavMesh: 5
+  parametroCaminar: EstaCaminando
+  parametroComer: EstaComiendo
+  parametroIdle: EstaIdle
+  triggerFelicidad: Felicidad
+  usarTriggerFelicidad: 0
 --- !u!114 &9120454870766015910
 MonoBehaviour:
   m_ObjectHideFlags: 0
