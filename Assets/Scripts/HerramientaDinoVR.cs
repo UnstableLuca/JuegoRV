@@ -38,7 +38,7 @@ public class HerramientaDinoVR : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    void OnTriggerStay(Collider other)
+    public void ProcesarTrigger(Collider other)
     {
         if (modoUso != ModoUso.MientrasToca)
             return;

@@ -29,11 +29,18 @@ public class CerebroDino : MonoBehaviour
     public NavMeshAgent agent;
     public Animator animator;
 
-    [Header("Lugares de necesidades")]
+    [Header("Lugares fijos de necesidades")]
     public Transform foodStation;
     public Transform careStation;
     public Transform cleaningStation;
     public Transform healingStation;
+
+    [Header("Objetos en mano / herramientas")]
+    public bool buscarObjetosEnMano = true;
+    public float distanciaMaximaObjetoEnMano = 15f;
+    public float intervaloActualizarDestinoMovil = 0.25f;
+    public float distanciaBusquedaNavMeshDestino = 4f;
+    public float distanciaLlegadaObjetoEnMano = 1.5f;
 
     [Header("Vagabundeo")]
     public Transform wanderCenter;
@@ -71,6 +78,10 @@ public class CerebroDino : MonoBehaviour
 
     private float wanderTimer;
     private float idleTimer;
+    private float actualizarDestinoTimer;
+
+    private Transform destinoNecesidadActual;
+    private bool destinoActualEsObjetoEnMano;
 
     void Start()
     {
@@ -140,8 +151,15 @@ public class CerebroDino : MonoBehaviour
             return;
         }
 
-        estadoActual = Estado.Vagando;
-        ElegirNuevoDestinoVagabundeo();
+        if (puedeCaminar)
+        {
+            estadoActual = Estado.Vagando;
+            ElegirNuevoDestinoVagabundeo();
+        }
+        else
+        {
+            IniciarIdle(false);
+        }
     }
 
     void EjecutarVagabundeo()
@@ -194,11 +212,54 @@ public class CerebroDino : MonoBehaviour
         if (agent == null || !agent.enabled || !agent.isOnNavMesh)
             return;
 
+        if (destinoNecesidadActual == null)
+        {
+            IniciarIdle(false);
+            return;
+        }
+
+        if (destinoActualEsObjetoEnMano && ObjetoEnManoYaNoEsValido(destinoNecesidadActual))
+        {
+            Transform nuevoDestino = ObtenerDestinoParaNecesidad(necesidadActual);
+
+            if (nuevoDestino == null)
+            {
+                IniciarIdle(false);
+                return;
+            }
+
+            destinoNecesidadActual = nuevoDestino;
+            destinoActualEsObjetoEnMano = EsObjetoNecesidadEnMano(nuevoDestino);
+            actualizarDestinoTimer = 0f;
+        }
+
+        actualizarDestinoTimer -= Time.deltaTime;
+
+        if (actualizarDestinoTimer <= 0f)
+        {
+            actualizarDestinoTimer = intervaloActualizarDestinoMovil;
+            MoverAgenteHaciaDestino(destinoNecesidadActual);
+        }
+
         if (agent.pathPending)
             return;
 
-        bool llegoAlDestino =
-            agent.remainingDistance <= agent.stoppingDistance + 0.3f;
+        bool llegoAlDestino;
+
+        if (destinoActualEsObjetoEnMano)
+        {
+            float distanciaReal = Vector3.Distance(
+                transform.position,
+                destinoNecesidadActual.position
+            );
+
+            llegoAlDestino = distanciaReal <= distanciaLlegadaObjetoEnMano;
+        }
+        else
+        {
+            llegoAlDestino =
+                agent.remainingDistance <= agent.stoppingDistance + 0.3f;
+        }
 
         if (llegoAlDestino)
         {
@@ -333,15 +394,33 @@ public class CerebroDino : MonoBehaviour
         necesidadActual = necesidad;
         estadoActual = Estado.YendoANecesidad;
 
+        destinoNecesidadActual = destino;
+        destinoActualEsObjetoEnMano = EsObjetoNecesidadEnMano(destino);
+        actualizarDestinoTimer = 0f;
+
         ReiniciarAnimacionesDeAccion();
         SetBoolSeguro(parametroIdle, false);
 
         agent.isStopped = false;
-        agent.SetDestination(destino.position);
+        MoverAgenteHaciaDestino(destinoNecesidadActual);
     }
 
     Transform ObtenerDestinoParaNecesidad(Necesidad necesidad)
     {
+        if (buscarObjetosEnMano)
+        {
+            ObjetoNecesidadDino objeto = ObjetoNecesidadDino.BuscarObjetoParaNecesidad(
+                necesidad,
+                transform.position,
+                distanciaMaximaObjetoEnMano
+            );
+
+            if (objeto != null)
+            {
+                return objeto.transform;
+            }
+        }
+
         switch (necesidad)
         {
             case Necesidad.Hambre:
@@ -361,9 +440,70 @@ public class CerebroDino : MonoBehaviour
         }
     }
 
+    bool EsObjetoNecesidadEnMano(Transform posibleObjeto)
+    {
+        if (posibleObjeto == null)
+            return false;
+
+        ObjetoNecesidadDino objeto = posibleObjeto.GetComponent<ObjetoNecesidadDino>();
+
+        if (objeto == null)
+            return false;
+
+        return objeto.EstaAgarrado;
+    }
+
+    bool ObjetoEnManoYaNoEsValido(Transform posibleObjeto)
+    {
+        if (posibleObjeto == null)
+            return true;
+
+        ObjetoNecesidadDino objeto = posibleObjeto.GetComponent<ObjetoNecesidadDino>();
+
+        if (objeto == null)
+            return true;
+
+        if (!objeto.atraeDinos)
+            return true;
+
+        if (objeto.soloAtraeSiEstaAgarrado && !objeto.EstaAgarrado)
+            return true;
+
+        if (!objeto.PuedeCubrirNecesidad(necesidadActual))
+            return true;
+
+        return false;
+    }
+
+    void MoverAgenteHaciaDestino(Transform destino)
+    {
+        if (destino == null)
+            return;
+
+        if (agent == null || !agent.enabled || !agent.isOnNavMesh)
+            return;
+
+        NavMeshHit hit;
+
+        bool encontroPuntoNavMesh = NavMesh.SamplePosition(
+            destino.position,
+            out hit,
+            distanciaBusquedaNavMeshDestino,
+            NavMesh.AllAreas
+        );
+
+        if (encontroPuntoNavMesh)
+        {
+            agent.SetDestination(hit.position);
+        }
+    }
+
     void TerminarNecesidad()
     {
         necesidadActual = Necesidad.Ninguna;
+        destinoNecesidadActual = null;
+        destinoActualEsObjetoEnMano = false;
+
         ReiniciarAnimacionesDeAccion();
 
         if (stats != null)
@@ -384,11 +524,16 @@ public class CerebroDino : MonoBehaviour
     {
         estadoActual = Estado.EsperandoIdle;
         necesidadActual = Necesidad.Ninguna;
+        destinoNecesidadActual = null;
+        destinoActualEsObjetoEnMano = false;
 
         DetenerAgente();
         ReiniciarAnimacionesDeAccion();
 
-        idleTimer = Random.Range(idleTimeMin, idleTimeMax);
+        float min = Mathf.Min(idleTimeMin, idleTimeMax);
+        float max = Mathf.Max(idleTimeMin, idleTimeMax);
+
+        idleTimer = Random.Range(min, max);
 
         if (guardarStats && stats != null)
             stats.SaveStats();
@@ -508,7 +653,7 @@ public class CerebroDino : MonoBehaviour
             caminando =
                 !agent.isStopped &&
                 agent.velocity.magnitude > 0.1f &&
-                estadoActual == Estado.Vagando || estadoActual == Estado.YendoANecesidad;
+                (estadoActual == Estado.Vagando || estadoActual == Estado.YendoANecesidad);
         }
 
         SetBoolSeguro(parametroCaminar, caminando);
