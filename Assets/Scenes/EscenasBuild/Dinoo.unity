@@ -368,6 +368,21 @@ MonoBehaviour:
   prefabCuencoComida: {fileID: 6388233474581680592, guid: d8a6c465951ab5041ad8ed75a16dbd86, type: 3}
   puntoSueloRA: {fileID: 6280073705655297778, guid: f1dfd2d264ea265418d66c3d5979dec7, type: 3}
   dinosaurioActual: {fileID: 0}
+  velocidadDino: 1.5
+  velocidadRotacion: 5
+  distanciaParada: 0.15
+  tiempoComiendo: 3
+  distanciaFrenteJugador: 1.5
+  cantidadComida: 35
+  cantidadCuidadoPorCaricia: 10
+  tiempoAntesDeVolver: 3
+  restaurarPosicionVirtualAlFinal: 1
+  distanciaBuscarNavMesh: 5
+  parametroCaminar: EstaCaminando
+  parametroComer: EstaComiendo
+  parametroIdle: EstaIdle
+  triggerFelicidad: Felicidad
+  usarTriggerFelicidad: 0
 --- !u!1 &220308353
 GameObject:
   m_ObjectHideFlags: 0
@@ -2823,6 +2838,21 @@ MonoBehaviour:
   prefabCuencoComida: {fileID: 6388233474581680592, guid: d8a6c465951ab5041ad8ed75a16dbd86, type: 3}
   puntoSueloRA: {fileID: 6280073705655297778, guid: f1dfd2d264ea265418d66c3d5979dec7, type: 3}
   dinosaurioActual: {fileID: 0}
+  velocidadDino: 1.5
+  velocidadRotacion: 5
+  distanciaParada: 0.15
+  tiempoComiendo: 3
+  distanciaFrenteJugador: 1.5
+  cantidadComida: 35
+  cantidadCuidadoPorCaricia: 10
+  tiempoAntesDeVolver: 3
+  restaurarPosicionVirtualAlFinal: 1
+  distanciaBuscarNavMesh: 5
+  parametroCaminar: EstaCaminando
+  parametroComer: EstaComiendo
+  parametroIdle: EstaIdle
+  triggerFelicidad: Felicidad
+  usarTriggerFelicidad: 0
 --- !u!114 &836765751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3819,7 +3849,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1050060694013536183, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1105525748468508366, guid: 9c387942e73b61547b56f45d946cacfb, type: 3}
       propertyPath: m_InteractionManager
