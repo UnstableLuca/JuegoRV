@@ -6,7 +6,7 @@ public class MyHandController : MonoBehaviour
     [SerializeField] InputActionReference actionGrip;
     [SerializeField] InputActionReference actionTrigger;
     private Animator handAnimator;
-    void Start()
+    void Awake()
     {
         actionTrigger.action.performed += TriggerPress;
         actionGrip.action.performed += GripPress;
@@ -14,10 +14,14 @@ public class MyHandController : MonoBehaviour
     }
     private void GripPress(InputAction.CallbackContext obj)
     {
-        handAnimator.SetFloat("Grip", obj.ReadValue<float>());
+        if (handAnimator != null)
+            handAnimator.SetFloat("Grip", obj.ReadValue<float>());
     }
     private void TriggerPress(InputAction.CallbackContext obj)
     {
-        handAnimator.SetFloat("Trigger", obj.ReadValue<float>());
+        if (handAnimator != null)
+        {
+            handAnimator.SetFloat("Trigger", obj.ReadValue<float>());
+        }
     }
 }

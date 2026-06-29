@@ -2,7 +2,7 @@
 - Project name: JuegoRV
 - Unity version: Unity 6000.0.60f1
 - Active game object:
-  - Name: Button (1)
+  - Name: Left Hand Model
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
