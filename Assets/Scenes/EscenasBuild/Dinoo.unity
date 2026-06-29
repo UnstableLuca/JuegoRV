@@ -427,6 +427,7 @@ GameObject:
   - component: {fileID: 141940678}
   - component: {fileID: 141940680}
   - component: {fileID: 141940681}
+  - component: {fileID: 141940682}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -513,6 +514,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textoNombre: {fileID: 1849257415}
+--- !u!114 &141940682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141940677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e13ebeae8e8b219408390a86a896d08d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  luzDirecional: {fileID: 705507994}
 --- !u!1 &220308353
 GameObject:
   m_ObjectHideFlags: 0
@@ -4704,12 +4718,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5909942479405488641, guid: 059fd1ed201512e49838942824e7f644, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909942479405488641, guid: 059fd1ed201512e49838942824e7f644, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5909942479405488641, guid: 059fd1ed201512e49838942824e7f644, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 836765748}
+      objectReference: {fileID: 141940682}
     - target: {fileID: 5909942479405488641, guid: 059fd1ed201512e49838942824e7f644, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2

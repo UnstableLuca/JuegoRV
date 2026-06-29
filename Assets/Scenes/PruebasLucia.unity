@@ -4606,11 +4606,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: {fileID: 0}
-  leftHandInteractor: {fileID: 0}
-  rightHandInteractor: {fileID: 0}
+  stats: {fileID: 0}
   minPetSpeed: 0.02
   maxPetSpeed: 0.25
   smoothing: 12
+  increaseCareWhenPetting: 1
+  carePerSecond: 8
+  useHaptics: 1
   pulseDuration: 0.02
   pulseInterval: 0.04
   amplitudeCurve:
@@ -6731,11 +6733,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entornoVirtualRV: {fileID: 1310860963}
+  desactivarGravedadJugadorDuranteComida: 1
+  rigidbodiesJugador: []
+  scriptsGravedadJugador: []
   planeManagerRA: {fileID: 884745276}
   raycastManagerRA: {fileID: 884745275}
   prefabCuencoComida: {fileID: 0}
   puntoSueloRA: {fileID: 6280073705655297778, guid: f1dfd2d264ea265418d66c3d5979dec7, type: 3}
   dinosaurioActual: {fileID: 0}
+  velocidadDino: 1.5
+  velocidadRotacion: 5
+  distanciaParada: 0.15
+  tiempoComiendo: 3
+  distanciaFrenteJugador: 1.5
+  cantidadComida: 35
+  cantidadCuidadoPorCaricia: 10
+  tiempoAntesDeVolver: 3
+  restaurarPosicionVirtualAlFinal: 1
+  distanciaBuscarNavMesh: 5
+  parametroCaminar: EstaCaminando
+  parametroComer: EstaComiendo
+  parametroIdle: EstaIdle
+  triggerFelicidad: Felicidad
+  usarTriggerFelicidad: 0
 --- !u!4 &1910735647
 Transform:
   m_ObjectHideFlags: 0

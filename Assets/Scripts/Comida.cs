@@ -13,16 +13,16 @@ public class Comida : MonoBehaviour
         EsperandoCaricia
     }
 
-    [Header("Configuración de Entornos")]
+    [Header("Configuracion Entornos")]
     public GameObject entornoVirtualRV;
 
-    [Header("Jugador - Gravedad temporal")]
+    [Header("Jugador Gravedad temporal")]
     public bool desactivarGravedadJugadorDuranteComida = true;
 
-    [Tooltip("Si tu jugador/XR Rig usa Rigidbody, arrástralo aquí.")]
+    [Tooltip("Si hay rigidbody")]
     public Rigidbody[] rigidbodiesJugador;
 
-    [Tooltip("Si la gravedad/movimiento viene de scripts, arrástralos aquí. Ejemplo: Continuous Move Provider.")]
+    [Tooltip("Si Gravedad")]
     public Behaviour[] scriptsGravedadJugador;
 
     private bool[] estadosOriginalesUseGravity;
