@@ -14,16 +14,14 @@ public class CerebroDino : MonoBehaviour
 
     public enum Estado
     {
+        EsperandoIdle,
         Vagando,
         YendoANecesidad,
-        SatisfaciendoNecesidad,
-        Volando,
-        Aterrizando
+        SatisfaciendoNecesidad
     }
 
     [Header("Capacidades")]
     public bool puedeCaminar = true;
-    public bool puedeVolar = false;
     public bool puedeAtenderNecesidades = true;
 
     [Header("Referencias")]
@@ -42,6 +40,13 @@ public class CerebroDino : MonoBehaviour
     public float wanderRadius = 10f;
     public float wanderChangeTime = 4f;
 
+    [Header("Idle / Espera")]
+    public float idleTimeMin = 2f;
+    public float idleTimeMax = 5f;
+    public bool esperarIdleAlTerminarNecesidad = true;
+    public bool esperarIdleAlLlegarDestino = true;
+    public bool idlePuedeSerInterrumpidoPorNecesidadCritica = true;
+
     [Header("Umbrales de necesidad")]
     public float needThreshold = 45f;
     public float criticalThreshold = 20f;
@@ -53,39 +58,19 @@ public class CerebroDino : MonoBehaviour
     public float cleanAmountPerSecond = 10f;
     public float healAmountPerSecond = 8f;
 
-    [Header("Vuelo")]
-    public float velocidadVolar = 4f;
-    public float velocidadAterrizar = 2f;
-    public float alturaMinVuelo = 2f;
-    public float alturaMaxVuelo = 5f;
-    public float tiempoVueloMin = 4f;
-    public float tiempoVueloMax = 8f;
-    public float probabilidadVolar = 0.15f;
-    public float tiempoCambioDireccionVuelo = 3f;
-    public float distanciaBusquedaSuelo = 30f;
-
-    [Header("Evitar obstáculos en vuelo simple")]
-    public bool evitarObstaculosVolando = true;
-    public float distanciaDeteccionVuelo = 3f;
-    public LayerMask capasObstaculosVuelo = ~0;
-
     [Header("Animaciones")]
     public string parametroCaminar = "EstaCaminando";
-    public string parametroVolar = "volando";
+    public string parametroIdle = "EstaIdle";
     public string parametroComer = "EstaComiendo";
     public string parametroJugar = "EstaJugando";
     public string parametroLimpiar = "EstaLimpiando";
     public string parametroCurar = "EstaCurando";
 
-    private Estado estadoActual = Estado.Vagando;
+    private Estado estadoActual = Estado.EsperandoIdle;
     private Necesidad necesidadActual = Necesidad.Ninguna;
 
     private float wanderTimer;
-    private float vueloTimer;
-    private float cambioDireccionVueloTimer;
-    private float alturaObjetivoVuelo;
-
-    private Vector3 direccionVuelo;
+    private float idleTimer;
 
     void Start()
     {
@@ -98,23 +83,16 @@ public class CerebroDino : MonoBehaviour
         if (animator == null)
             animator = GetComponent<Animator>();
 
-        estadoActual = Estado.Vagando;
-        necesidadActual = Necesidad.Ninguna;
-
         PrepararAgenteParaSuelo();
-        ElegirNuevoDestinoVagabundeo();
+        IniciarIdle(false);
     }
 
     void Update()
     {
         switch (estadoActual)
         {
-            case Estado.Volando:
-                EjecutarVuelo();
-                break;
-
-            case Estado.Aterrizando:
-                EjecutarAterrizaje();
+            case Estado.EsperandoIdle:
+                EjecutarIdle();
                 break;
 
             case Estado.Vagando:
@@ -131,24 +109,54 @@ public class CerebroDino : MonoBehaviour
         }
 
         ActualizarAnimacionCaminar();
+        ActualizarAnimacionIdle();
+    }
+
+    void EjecutarIdle()
+    {
+        DetenerAgente();
+
+        if (idlePuedeSerInterrumpidoPorNecesidadCritica && puedeAtenderNecesidades)
+        {
+            Necesidad necesidadCritica = ObtenerNecesidadCritica();
+
+            if (necesidadCritica != Necesidad.Ninguna)
+            {
+                IrANecesidad(necesidadCritica);
+                return;
+            }
+        }
+
+        idleTimer -= Time.deltaTime;
+
+        if (idleTimer > 0f)
+            return;
+
+        Necesidad necesidad = ObtenerNecesidadMasUrgente();
+
+        if (puedeAtenderNecesidades && necesidad != Necesidad.Ninguna)
+        {
+            IrANecesidad(necesidad);
+            return;
+        }
+
+        estadoActual = Estado.Vagando;
+        ElegirNuevoDestinoVagabundeo();
     }
 
     void EjecutarVagabundeo()
     {
         if (!puedeCaminar)
+        {
+            IniciarIdle(false);
             return;
+        }
 
         Necesidad necesidadMasUrgente = ObtenerNecesidadMasUrgente();
 
         if (puedeAtenderNecesidades && necesidadMasUrgente != Necesidad.Ninguna)
         {
             IrANecesidad(necesidadMasUrgente);
-            return;
-        }
-
-        if (puedeVolar && Random.value < probabilidadVolar * Time.deltaTime)
-        {
-            IniciarVuelo();
             return;
         }
 
@@ -161,7 +169,21 @@ public class CerebroDino : MonoBehaviour
             !agent.pathPending &&
             agent.remainingDistance <= agent.stoppingDistance + 0.3f;
 
-        if (wanderTimer <= 0f || llegoAlDestino)
+        if (llegoAlDestino)
+        {
+            if (esperarIdleAlLlegarDestino)
+            {
+                IniciarIdle(false);
+            }
+            else
+            {
+                ElegirNuevoDestinoVagabundeo();
+            }
+
+            return;
+        }
+
+        if (wanderTimer <= 0f)
         {
             ElegirNuevoDestinoVagabundeo();
         }
@@ -175,11 +197,13 @@ public class CerebroDino : MonoBehaviour
         if (agent.pathPending)
             return;
 
-        bool llegoAlDestino = agent.remainingDistance <= agent.stoppingDistance + 0.3f;
+        bool llegoAlDestino =
+            agent.remainingDistance <= agent.stoppingDistance + 0.3f;
 
         if (llegoAlDestino)
         {
-            agent.isStopped = true;
+            DetenerAgente();
+
             estadoActual = Estado.SatisfaciendoNecesidad;
             ActivarAnimacionDeNecesidad(necesidadActual);
         }
@@ -187,6 +211,9 @@ public class CerebroDino : MonoBehaviour
 
     void EjecutarSatisfacerNecesidad()
     {
+        if (stats == null)
+            return;
+
         switch (necesidadActual)
         {
             case Necesidad.Hambre:
@@ -231,8 +258,6 @@ public class CerebroDino : MonoBehaviour
         Necesidad necesidad = Necesidad.Ninguna;
         float valorMasBajo = needThreshold;
 
-        // Primero se priorizan hambre, cuidado y limpieza.
-        // Si estas están en cero, siguen dañando la vida.
         if (stats.hunger < valorMasBajo)
         {
             valorMasBajo = stats.hunger;
@@ -254,8 +279,42 @@ public class CerebroDino : MonoBehaviour
         if (necesidad != Necesidad.Ninguna)
             return necesidad;
 
-        // La salud se atiende cuando no hay otra necesidad básica urgente.
         if (stats.health < needThreshold)
+            return Necesidad.Salud;
+
+        return Necesidad.Ninguna;
+    }
+
+    Necesidad ObtenerNecesidadCritica()
+    {
+        if (stats == null)
+            return Necesidad.Ninguna;
+
+        Necesidad necesidad = Necesidad.Ninguna;
+        float valorMasBajo = criticalThreshold;
+
+        if (stats.hunger < valorMasBajo)
+        {
+            valorMasBajo = stats.hunger;
+            necesidad = Necesidad.Hambre;
+        }
+
+        if (stats.care < valorMasBajo)
+        {
+            valorMasBajo = stats.care;
+            necesidad = Necesidad.Cuidado;
+        }
+
+        if (stats.cleanliness < valorMasBajo)
+        {
+            valorMasBajo = stats.cleanliness;
+            necesidad = Necesidad.Limpieza;
+        }
+
+        if (necesidad != Necesidad.Ninguna)
+            return necesidad;
+
+        if (stats.health < criticalThreshold)
             return Necesidad.Salud;
 
         return Necesidad.Ninguna;
@@ -275,6 +334,7 @@ public class CerebroDino : MonoBehaviour
         estadoActual = Estado.YendoANecesidad;
 
         ReiniciarAnimacionesDeAccion();
+        SetBoolSeguro(parametroIdle, false);
 
         agent.isStopped = false;
         agent.SetDestination(destino.position);
@@ -304,19 +364,44 @@ public class CerebroDino : MonoBehaviour
     void TerminarNecesidad()
     {
         necesidadActual = Necesidad.Ninguna;
-        estadoActual = Estado.Vagando;
-
         ReiniciarAnimacionesDeAccion();
 
         if (stats != null)
             stats.SaveStats();
 
-        PrepararAgenteParaSuelo();
-        ElegirNuevoDestinoVagabundeo();
+        if (esperarIdleAlTerminarNecesidad)
+        {
+            IniciarIdle(false);
+        }
+        else
+        {
+            estadoActual = Estado.Vagando;
+            ElegirNuevoDestinoVagabundeo();
+        }
+    }
+
+    void IniciarIdle(bool guardarStats)
+    {
+        estadoActual = Estado.EsperandoIdle;
+        necesidadActual = Necesidad.Ninguna;
+
+        DetenerAgente();
+        ReiniciarAnimacionesDeAccion();
+
+        idleTimer = Random.Range(idleTimeMin, idleTimeMax);
+
+        if (guardarStats && stats != null)
+            stats.SaveStats();
     }
 
     void ElegirNuevoDestinoVagabundeo()
     {
+        if (!puedeCaminar)
+        {
+            IniciarIdle(false);
+            return;
+        }
+
         if (!PrepararAgenteParaSuelo())
             return;
 
@@ -340,140 +425,8 @@ public class CerebroDino : MonoBehaviour
                 return;
             }
         }
-    }
 
-    void IniciarVuelo()
-    {
-        if (!puedeVolar)
-            return;
-
-        DesactivarAgenteParaVuelo();
-
-        estadoActual = Estado.Volando;
-        necesidadActual = Necesidad.Ninguna;
-
-        vueloTimer = Random.Range(tiempoVueloMin, tiempoVueloMax);
-        alturaObjetivoVuelo = Random.Range(alturaMinVuelo, alturaMaxVuelo);
-
-        ElegirNuevaDireccionVuelo();
-
-        ReiniciarAnimacionesDeAccion();
-        SetBoolSeguro(parametroVolar, true);
-    }
-
-    void EjecutarVuelo()
-    {
-        vueloTimer -= Time.deltaTime;
-        cambioDireccionVueloTimer -= Time.deltaTime;
-
-        Necesidad necesidadUrgente = ObtenerNecesidadMasUrgente();
-
-        if (puedeAtenderNecesidades && necesidadUrgente != Necesidad.Ninguna)
-        {
-            IniciarAterrizaje();
-            return;
-        }
-
-        if (vueloTimer <= 0f)
-        {
-            IniciarAterrizaje();
-            return;
-        }
-
-        if (cambioDireccionVueloTimer <= 0f)
-        {
-            ElegirNuevaDireccionVuelo();
-        }
-
-        if (evitarObstaculosVolando)
-        {
-            if (Physics.Raycast(transform.position, direccionVuelo, distanciaDeteccionVuelo, capasObstaculosVuelo))
-            {
-                ElegirNuevaDireccionVuelo();
-            }
-        }
-
-        Vector3 movimientoHorizontal = direccionVuelo * velocidadVolar * Time.deltaTime;
-
-        Vector3 nuevaPosicion = transform.position + movimientoHorizontal;
-        nuevaPosicion.y = Mathf.MoveTowards(
-            nuevaPosicion.y,
-            alturaObjetivoVuelo,
-            velocidadAterrizar * Time.deltaTime
-        );
-
-        transform.position = nuevaPosicion;
-
-        if (direccionVuelo != Vector3.zero)
-        {
-            Quaternion rotacionObjetivo = Quaternion.LookRotation(direccionVuelo);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotacionObjetivo, Time.deltaTime * 3f);
-        }
-    }
-
-    void ElegirNuevaDireccionVuelo()
-    {
-        float anguloY = Random.Range(0f, 360f);
-        direccionVuelo = Quaternion.Euler(0f, anguloY, 0f) * Vector3.forward;
-        direccionVuelo.Normalize();
-
-        cambioDireccionVueloTimer = tiempoCambioDireccionVuelo;
-    }
-
-    void IniciarAterrizaje()
-    {
-        estadoActual = Estado.Aterrizando;
-        SetBoolSeguro(parametroVolar, true);
-    }
-
-    void EjecutarAterrizaje()
-    {
-        NavMeshHit hit;
-
-        bool encontroSuelo = NavMesh.SamplePosition(
-            transform.position,
-            out hit,
-            distanciaBusquedaSuelo,
-            NavMesh.AllAreas
-        );
-
-        float alturaDestino = encontroSuelo ? hit.position.y : 0f;
-
-        Vector3 pos = transform.position;
-        pos.y = Mathf.MoveTowards(pos.y, alturaDestino, velocidadAterrizar * Time.deltaTime);
-        transform.position = pos;
-
-        Quaternion rotacionHorizontal = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
-
-        transform.rotation = Quaternion.Lerp(
-            transform.rotation,
-            rotacionHorizontal,
-            Time.deltaTime * 2f
-        );
-
-        if (Mathf.Abs(transform.position.y - alturaDestino) <= 0.05f)
-        {
-            SetBoolSeguro(parametroVolar, false);
-
-            if (encontroSuelo)
-            {
-                transform.position = hit.position;
-            }
-
-            PrepararAgenteParaSuelo();
-
-            Necesidad necesidad = ObtenerNecesidadMasUrgente();
-
-            if (puedeAtenderNecesidades && necesidad != Necesidad.Ninguna)
-            {
-                IrANecesidad(necesidad);
-            }
-            else
-            {
-                estadoActual = Estado.Vagando;
-                ElegirNuevoDestinoVagabundeo();
-            }
-        }
+        IniciarIdle(false);
     }
 
     bool PrepararAgenteParaSuelo()
@@ -482,25 +435,13 @@ public class CerebroDino : MonoBehaviour
             return false;
 
         if (!agent.enabled)
-        {
-            NavMeshHit hit;
-
-            if (NavMesh.SamplePosition(transform.position, out hit, distanciaBusquedaSuelo, NavMesh.AllAreas))
-            {
-                transform.position = hit.position;
-                agent.enabled = true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+            agent.enabled = true;
 
         if (!agent.isOnNavMesh)
         {
             NavMeshHit hit;
 
-            if (NavMesh.SamplePosition(transform.position, out hit, distanciaBusquedaSuelo, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(transform.position, out hit, 10f, NavMesh.AllAreas))
             {
                 agent.Warp(hit.position);
             }
@@ -510,31 +451,25 @@ public class CerebroDino : MonoBehaviour
             }
         }
 
-        if (agent.isOnNavMesh)
-        {
-            agent.isStopped = false;
-            return true;
-        }
-
-        return false;
+        return agent.isOnNavMesh;
     }
 
-    void DesactivarAgenteParaVuelo()
+    void DetenerAgente()
     {
         if (agent == null)
             return;
 
         if (agent.enabled && agent.isOnNavMesh)
         {
+            agent.isStopped = true;
             agent.ResetPath();
         }
-
-        agent.enabled = false;
     }
 
     void ActivarAnimacionDeNecesidad(Necesidad necesidad)
     {
         ReiniciarAnimacionesDeAccion();
+        SetBoolSeguro(parametroIdle, false);
 
         switch (necesidad)
         {
@@ -573,11 +508,16 @@ public class CerebroDino : MonoBehaviour
             caminando =
                 !agent.isStopped &&
                 agent.velocity.magnitude > 0.1f &&
-                estadoActual != Estado.Volando &&
-                estadoActual != Estado.Aterrizando;
+                estadoActual == Estado.Vagando || estadoActual == Estado.YendoANecesidad;
         }
 
         SetBoolSeguro(parametroCaminar, caminando);
+    }
+
+    void ActualizarAnimacionIdle()
+    {
+        bool estaIdle = estadoActual == Estado.EsperandoIdle;
+        SetBoolSeguro(parametroIdle, estaIdle);
     }
 
     void SetBoolSeguro(string nombreParametro, bool valor)

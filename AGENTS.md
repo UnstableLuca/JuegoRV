@@ -2,7 +2,7 @@
 - Project name: JuegoRV
 - Unity version: Unity 6000.0.60f1
 - Active game object:
-  - Name: Left Hand Model
+  - Name: NarizPayaso
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
